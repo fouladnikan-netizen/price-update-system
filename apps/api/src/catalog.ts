@@ -4,6 +4,70 @@ import { getCategoryBrands, type CategoryBrand } from "../../web/src/mock/catego
 import { getProductCategory, getProductGroup } from "../../web/src/mock/data.ts";
 import { normalizeGrade, normalizeSize } from "./numbers.ts";
 
+const BRAND_STOP = new Set([
+  "فولاد",
+  "میلگرد",
+  "تیرآهن",
+  "نبشی",
+  "ناودانی",
+  "ورق",
+  "لوله",
+  "شرکت",
+  "مجتمع",
+  "صنایع",
+  "نورد",
+  "کارخانه",
+  "گروه",
+  "ایرانیان",
+]);
+
+export function normalizeBrandKey(value: string): string {
+  return value
+    .replace(/\u200c/g, " ")
+    .replace(/\u200d/g, "")
+    .replace(/ي/g, "ی")
+    .replace(/ك/g, "ک")
+    .replace(/آ/g, "ا")
+    .replace(/أ/g, "ا")
+    .replace(/إ/g, "ا")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function brandCore(value: string): string {
+  return normalizeBrandKey(value)
+    .replace(/(فولاد|میلگرد|اهن|مجتمع|صنایع)/g, " $1 ")
+    .replace(/\s+/g, " ")
+    .replace(/^(میلگرد|تیرآهن|نبشی|ناودانی|ورق|لوله)\s+/, "")
+    .trim();
+}
+
+function uniqueBrand(hits: CategoryBrand[]): CategoryBrand | null {
+  return hits.length === 1 ? hits[0] : null;
+}
+
+/** Source wording → catalog mill name. Only 1-to-1 aliases; never merge distinct mills. */
+const MILL_ALIASES = new Map<string, string>(
+  [
+    ["قائم اصفهان", "قائم رازی"],
+    ["قایم اصفهان", "قائم رازی"],
+    ["قایم رازی", "قائم رازی"],
+    ["گروه ملی", "گروه ملی فولاد"],
+    ["گروه ملی صنعتی", "گروه ملی فولاد"],
+    ["ملی فولاد", "گروه ملی فولاد"],
+  ].map(([from, to]) => [brandCore(from), to]),
+);
+
+function brandByCatalogName(brands: CategoryBrand[], catalogName: string): CategoryBrand | null {
+  return brands.find((item) => brandCore(item.name) === brandCore(catalogName)) ?? null;
+}
+
+function aliasBrand(brands: CategoryBrand[], needle: string): CategoryBrand | null {
+  const target = MILL_ALIASES.get(needle);
+  return target ? brandByCatalogName(brands, target) : null;
+}
+
 export type CatalogProduct = {
   sku: string;
   name: string;
@@ -13,7 +77,7 @@ export type CatalogProduct = {
   sizeLabel: string;
 };
 
-const PRODUCTS = JSON.parse(
+export const PRODUCTS = JSON.parse(
   readFileSync(resolve(import.meta.dirname, "../../web/src/mock/category-products.json"), "utf8"),
 ) as CatalogProduct[];
 
@@ -85,11 +149,53 @@ export function findBrand(
     if (byId) return byId;
   }
   if (!brandName) return null;
-  const needle = brandName.replace(/\s+/g, " ").trim();
-  const exact = brands.filter((item) => item.name === needle);
-  return exact.length === 1 ? exact[0] : null;
+  const needle = brandCore(brandName);
+  if (needle.length < 2) return null;
+
+  const aliased = aliasBrand(brands, needle);
+  if (aliased) return aliased;
+
+  const exact = uniqueBrand(
+    brands.filter((item) => brandCore(item.name) === needle || normalizeBrandKey(item.name) === normalizeBrandKey(brandName)),
+  );
+  if (exact) return exact;
+
+  const contained = uniqueBrand(
+    brands.filter((item) => {
+      const hay = brandCore(item.name);
+      if (needle.length < 3 || hay.length < 3) return false;
+      return hay.includes(needle) || needle.includes(hay);
+    }),
+  );
+  if (contained) return contained;
+
+  const tokens = needle.split(" ").filter((part) => part.length >= 3 && !BRAND_STOP.has(part));
+  if (!tokens.length) return null;
+  return uniqueBrand(
+    brands.filter((item) => {
+      const hay = brandCore(item.name);
+      return tokens.every((token) => hay.includes(token));
+    }),
+  );
+}
+
+export function findBrandInText(brands: CategoryBrand[], text: string | null | undefined): CategoryBrand | null {
+  if (!text || text.trim().length > 220) return null;
+  const hay = brandCore(text);
+  if (!hay) return null;
+  const aliased = aliasBrand(brands, hay);
+  if (aliased) return aliased;
+  const hits = brands.filter((item) => {
+    const name = brandCore(item.name);
+    if (name.length >= 4 && hay.includes(name)) return true;
+    const tokens = name.split(" ").filter((part) => part.length >= 3 && !BRAND_STOP.has(part));
+    if (tokens.length >= 2) return tokens.every((token) => hay.includes(token));
+    return tokens.length === 1 && tokens[0].length >= 4 && hay.includes(tokens[0]);
+  });
+  return uniqueBrand(hits);
 }
 
 export function productAllowsBrand(product: CatalogProduct, brandName: string): boolean {
+  if (!product.brandNames.length) return true;
   return product.brandNames.includes(brandName);
 }

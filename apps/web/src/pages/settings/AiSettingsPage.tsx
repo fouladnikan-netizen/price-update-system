@@ -6,6 +6,7 @@ type Health = {
   model: string;
   promptVersion: string;
   autoPublish: boolean;
+  websiteConfigured?: boolean;
 };
 
 type PromptInfo = {
@@ -75,6 +76,18 @@ export function AiSettingsPage() {
               <th>انتشار خودکار</th>
               <td>
                 <span className="badge warning">خاموش</span>
+              </td>
+            </tr>
+            <tr>
+              <th>API وب‌سایت</th>
+              <td>
+                {health ? (
+                  <span className={`badge ${health.websiteConfigured ? "success" : "warning"}`}>
+                    {health.websiteConfigured ? "کلید روی سرور است" : "تنظیم نشده — صف محلی"}
+                  </span>
+                ) : (
+                  "—"
+                )}
               </td>
             </tr>
           </tbody>

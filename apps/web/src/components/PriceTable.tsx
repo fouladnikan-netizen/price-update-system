@@ -11,44 +11,86 @@ import {
   visibleExcelColumns,
   type ExcelCatalogFields,
 } from "../mock/catalogColumns";
+import { quotePolicyNote, quoteUnitForProduct } from "../mock/quoteUnit";
+import { ResizableTable, ResizableTh } from "../tables/ResizableTh";
+
+type PriceLookup = {
+  factoryPrice: number | null;
+  factorySource: string | null;
+  warehousePrice: number | null;
+  warehouseSource: string | null;
+};
 
 type Props = {
   products: CatalogProduct[];
   brandLabel: string;
   sizeColumnLabel?: string;
   onDetails: (product: CatalogProduct) => void;
+  resolvePrice?: (product: CatalogProduct) => PriceLookup | null;
 };
 
-const SHEET_EXCEL_KEYS: Array<keyof ExcelCatalogFields> = ["kind", "dimensions", "size", "weight", "unit"];
+const SHEET_EXCEL_KEYS: Array<keyof ExcelCatalogFields> = ["kind", "dimensions", "size"];
 
-export function PriceTable({ products, brandLabel, sizeColumnLabel, onDetails }: Props) {
+export function PriceTable({ products, brandLabel, sizeColumnLabel, onDetails, resolvePrice }: Props) {
   const showExcelSheet = isSheetCategory(products[0]?.groupCode);
   if (showExcelSheet) {
-    return <SheetExcelPriceTable products={products} brandLabel={brandLabel} onDetails={onDetails} />;
+    return (
+      <SheetExcelPriceTable products={products} brandLabel={brandLabel} onDetails={onDetails} resolvePrice={resolvePrice} />
+    );
   }
+  return (
+    <StandardPriceTable
+      products={products}
+      brandLabel={brandLabel}
+      sizeColumnLabel={sizeColumnLabel}
+      onDetails={onDetails}
+      resolvePrice={resolvePrice}
+    />
+  );
+}
+
+function StandardPriceTable({ products, brandLabel, sizeColumnLabel, onDetails, resolvePrice }: Props) {
   const columnLabel =
     sizeColumnLabel ?? productSizeColumnLabel(products[0]?.groupCode, products[0]?.categoryCode);
+  const tableId = `price:${products[0]?.groupCode ?? "all"}:std`;
+  const factoryUnit = quoteUnitForProduct(products[0], "factory");
+  const warehouseUnit = quoteUnitForProduct(products[0], "warehouse");
+  const policyNote = quotePolicyNote(products[0]?.groupCode, products[0]?.categoryCode);
   return (
     <div className="sheet">
       <div className="sheet-meta">
         <span>
           نمایش: {brandLabel} — {products.length.toLocaleString("fa-IR")} کالا
         </span>
-        <span>کارخانه و انبار دو نوع قیمت جدا هستند · داده غایب صفر نیست</span>
+        <span>
+          {policyNote ?? "کارخانه و انبار دو نوع قیمت جدا هستند"} · داده غایب صفر نیست
+        </span>
       </div>
       <div className="table-wrap">
-        <table className="price-table">
+        <ResizableTable id={tableId} className="price-table">
           <thead>
             <tr>
-              <th className="col-product">{columnLabel}</th>
-              <th className="col-factory">قیمت کارخانه</th>
-              <th className="col-warehouse">قیمت انبار</th>
-              <th className="col-action">مشاهدات</th>
+              <ResizableTh id="product" className="col-product">
+                {columnLabel}
+              </ResizableTh>
+              <ResizableTh id="factory" className="col-factory">
+                قیمت کارخانه
+                {factoryUnit ? <div className="muted">{factoryUnit}</div> : null}
+              </ResizableTh>
+              <ResizableTh id="warehouse" className="col-warehouse">
+                قیمت انبار
+                {warehouseUnit ? <div className="muted">{warehouseUnit}</div> : null}
+              </ResizableTh>
+              <ResizableTh id="action" className="col-action">
+                مشاهدات
+              </ResizableTh>
             </tr>
           </thead>
           <tbody>
             {products.length ? (
-              products.map((product) => (
+              products.map((product) => {
+                const price = resolvePrice?.(product);
+                return (
                 <tr key={`${product.sku}-${product.row}`}>
                   <td className="col-product">
                     <div className="product-cell">
@@ -59,10 +101,20 @@ export function PriceTable({ products, brandLabel, sizeColumnLabel, onDetails }:
                     </div>
                   </td>
                   <td className="col-factory">
-                    <PriceCell value={null} source={null} lane="factory" />
+                    <PriceCell
+                      value={price?.factoryPrice ?? null}
+                      source={price?.factorySource ?? null}
+                      lane="factory"
+                      unit={quoteUnitForProduct(product, "factory")}
+                    />
                   </td>
                   <td className="col-warehouse">
-                    <PriceCell value={null} source={null} lane="warehouse" />
+                    <PriceCell
+                      value={price?.warehousePrice ?? null}
+                      source={price?.warehouseSource ?? null}
+                      lane="warehouse"
+                      unit={quoteUnitForProduct(product, "warehouse")}
+                    />
                   </td>
                   <td className="col-action">
                     <button className="btn slim" type="button" onClick={() => onDetails(product)}>
@@ -70,7 +122,8 @@ export function PriceTable({ products, brandLabel, sizeColumnLabel, onDetails }:
                     </button>
                   </td>
                 </tr>
-              ))
+                );
+              })
             ) : (
               <tr>
                 <td colSpan={4} className="muted">
@@ -79,7 +132,7 @@ export function PriceTable({ products, brandLabel, sizeColumnLabel, onDetails }:
               </tr>
             )}
           </tbody>
-        </table>
+        </ResizableTable>
       </div>
     </div>
   );
@@ -89,11 +142,14 @@ function SheetExcelPriceTable({
   products,
   brandLabel,
   onDetails,
+  resolvePrice,
 }: {
   products: CatalogProduct[];
   brandLabel: string;
   onDetails: (product: CatalogProduct) => void;
+  resolvePrice?: Props["resolvePrice"];
 }) {
+  const tableId = `price:${products[0]?.groupCode ?? "all"}:sheet`;
   const rows = products.map((product) => ({ product, columns: catalogColumnRow(product) }));
   const excelColumns = visibleExcelColumns(rows.map(({ columns }) => columns)).filter((column) =>
     SHEET_EXCEL_KEYS.includes(column.key),
@@ -108,21 +164,33 @@ function SheetExcelPriceTable({
         <span>ستون‌ها مطابق کاتالوگ اکسل · NULL نمایش داده نمی‌شود</span>
       </div>
       <div className="table-wrap">
-        <table className="price-table">
+        <ResizableTable id={tableId} className="price-table">
           <thead>
             <tr>
-              <th className="col-product">نام کالا</th>
+              <ResizableTh id="name" className="col-product">
+                نام کالا
+              </ResizableTh>
               {excelColumns.map((column) => (
-                <th key={column.key}>{column.label}</th>
+                <ResizableTh key={column.key} id={column.key}>
+                  {column.label}
+                </ResizableTh>
               ))}
-              <th className="col-factory">قیمت کارخانه</th>
-              <th className="col-warehouse">قیمت انبار</th>
-              <th className="col-action">مشاهدات</th>
+              <ResizableTh id="factory" className="col-factory">
+                قیمت کارخانه
+              </ResizableTh>
+              <ResizableTh id="warehouse" className="col-warehouse">
+                قیمت انبار
+              </ResizableTh>
+              <ResizableTh id="action" className="col-action">
+                مشاهدات
+              </ResizableTh>
             </tr>
           </thead>
           <tbody>
             {rows.length ? (
-              rows.map(({ product, columns }) => (
+              rows.map(({ product, columns }) => {
+                const price = resolvePrice?.(product);
+                return (
                 <tr key={`${product.sku}-${product.row}`}>
                   <td className="col-product">
                     <div className="product-name">{columns.name}</div>
@@ -131,10 +199,20 @@ function SheetExcelPriceTable({
                     <td key={column.key}>{displayExcelValue(columns[column.key])}</td>
                   ))}
                   <td className="col-factory">
-                    <PriceCell value={null} source={null} lane="factory" />
+                    <PriceCell
+                      value={price?.factoryPrice ?? null}
+                      source={price?.factorySource ?? null}
+                      lane="factory"
+                      unit={quoteUnitForProduct(product, "factory")}
+                    />
                   </td>
                   <td className="col-warehouse">
-                    <PriceCell value={null} source={null} lane="warehouse" />
+                    <PriceCell
+                      value={price?.warehousePrice ?? null}
+                      source={price?.warehouseSource ?? null}
+                      lane="warehouse"
+                      unit={quoteUnitForProduct(product, "warehouse")}
+                    />
                   </td>
                   <td className="col-action">
                     <button className="btn slim" type="button" onClick={() => onDetails(product)}>
@@ -142,7 +220,8 @@ function SheetExcelPriceTable({
                     </button>
                   </td>
                 </tr>
-              ))
+                );
+              })
             ) : (
               <tr>
                 <td colSpan={colSpan} className="muted">
@@ -151,7 +230,7 @@ function SheetExcelPriceTable({
               </tr>
             )}
           </tbody>
-        </table>
+        </ResizableTable>
       </div>
     </div>
   );

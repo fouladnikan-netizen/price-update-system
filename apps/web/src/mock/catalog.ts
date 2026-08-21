@@ -14,7 +14,7 @@ export type CatalogProduct = {
 const PRODUCTS = catalog as CatalogProduct[];
 
 export function getAllCatalogProducts(): CatalogProduct[] {
-  return PRODUCTS;
+  return [...PRODUCTS].sort(compareProductsByGroupThenSize);
 }
 
 export function productRecordKey(product: CatalogProduct): string {
@@ -44,7 +44,7 @@ export function getCategoryProducts(
   const scoped = isChannelVariantCategory(groupCode, categoryCode)
     ? filterChannelVariant(products, categoryCode)
     : products;
-  return [...scoped].sort(compareProductsBySize);
+  return [...scoped].sort(compareProductsByGroupThenSize);
 }
 
 /** UI subgroup codes map onto the Website categoryCode `channel`. */
@@ -121,10 +121,23 @@ function productSortKey(product: CatalogProduct): number[] {
   return [displayed ?? mill, mill, product.row];
 }
 
+export const GROUP_DISPLAY_ORDER = ["rebar", "beam", "sheet", "angle", "channel", "profile", "pipe"] as const;
+
+function groupOrder(groupCode: string): number {
+  const index = GROUP_DISPLAY_ORDER.indexOf(groupCode as (typeof GROUP_DISPLAY_ORDER)[number]);
+  return index < 0 ? GROUP_DISPLAY_ORDER.length : index;
+}
+
 function compareProductsBySize(a: CatalogProduct, b: CatalogProduct): number {
   const bySize = compareSortKeys(productSortKey(a), productSortKey(b));
   if (bySize !== 0) return bySize;
   return a.name.localeCompare(b.name, "fa");
+}
+
+export function compareProductsByGroupThenSize(a: CatalogProduct, b: CatalogProduct): number {
+  const byGroup = groupOrder(a.groupCode) - groupOrder(b.groupCode);
+  if (byGroup !== 0) return byGroup;
+  return compareProductsBySize(a, b);
 }
 
 export function countGroupProducts(groupCode: string): number {

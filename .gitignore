@@ -6,3 +6,8 @@ dist
 .DS_Store
 *.session
 *.session-journal
+.local/
+data/raw-inputs/*
+!data/raw-inputs/.gitkeep
+data/applied-prices/*
+!data/applied-prices/.gitkeep

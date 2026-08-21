@@ -109,7 +109,7 @@ export const CATEGORY_BRANDS: Record<string, CategoryBrand[]> = {
     { id: "rebar-ribbed-06", name: "امیرکبیر خزر" },
     { id: "rebar-ribbed-07", name: "جهان فولاد سیرجان" },
     { id: "rebar-ribbed-08", name: "حدید سیرجان" },
-    { id: "rebar-ribbed-09", name: "خیام نیشابور" },
+    { id: "rebar-ribbed-09", name: "نیشابور" },
     { id: "rebar-ribbed-10", name: "درپاد تبریز" },
     { id: "rebar-ribbed-11", name: "ذوب آهن اصفهان" },
     { id: "rebar-ribbed-12", name: "راد همدان" },

@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { MOCK_DASHBOARD, MOCK_NOTICE, PRODUCT_GROUPS } from "../mock/data";
+import { ManualIntakeModal } from "../intake/ManualIntakeModal";
+import { usePriceUpdate } from "../intake/PriceUpdateState";
+import { MOCK_NOTICE, PRODUCT_GROUPS } from "../mock/data";
+import { IdentityNoticeBar } from "../settings/IdentityState";
+import { ApiHealthBar, useApiHealth } from "./ApiHealthBar";
 
-const pending = MOCK_DASHBOARD.pendingReviewCount.toLocaleString("fa-IR");
-
-function groupFromPath(pathname: string): string | null {
-  const match = pathname.match(/^\/category\/([^/]+)/);
-  return match?.[1] ?? null;
+function categoryScopeFromPath(pathname: string): { groupCode?: string; categoryCode?: string } | undefined {
+  const match = pathname.match(/^\/category\/([^/]+)(?:\/([^/]+))?/);
+  if (!match) return undefined;
+  return { groupCode: match[1], categoryCode: match[2] };
 }
 
 export function Layout() {
   const { pathname } = useLocation();
-  const activeGroup = groupFromPath(pathname);
+  const { busy, note, error, report, runUpdate } = usePriceUpdate();
+  const apiOk = useApiHealth();
+  const [manualOpen, setManualOpen] = useState(false);
+  const activeGroup = categoryScopeFromPath(pathname)?.groupCode ?? null;
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(PRODUCT_GROUPS.map((group) => [group.code, group.code === activeGroup])),
   );
@@ -31,7 +37,7 @@ export function Layout() {
         <div className="rail-brand">
           <span className="rail-kicker">میز قیمت</span>
           <strong>به‌روزرسانی روزانه</strong>
-          <p>هفت گروه اصلی — منبع و استخراج برای همه دسته‌ها</p>
+          <p>محصولات، وضعیت و قیمت روز</p>
         </div>
 
         <nav className="rail-nav" aria-label="میز کار">
@@ -40,7 +46,15 @@ export function Layout() {
           </NavLink>
         </nav>
 
-        <nav className="rail-nav" aria-label="گروه‌ها و دسته‌ها">
+        <nav className="rail-nav" aria-label="تنظیمات">
+          <p className="rail-label">تنظیمات</p>
+          <NavLink to="/settings/manufacturers">تولیدکنندگان</NavLink>
+          <NavLink to="/settings/products">محصولات</NavLink>
+          <NavLink to="/settings/sources">منابع</NavLink>
+          <NavLink to="/settings/keys">کلیدها و زمان‌بندی</NavLink>
+        </nav>
+
+        <nav className="rail-nav rail-groups" aria-label="گروه‌ها و دسته‌ها">
           <p className="rail-label">گروه‌ها</p>
           {PRODUCT_GROUPS.map((group) => {
             const open = Boolean(openGroups[group.code]);
@@ -72,32 +86,44 @@ export function Layout() {
           })}
         </nav>
 
-        <nav className="rail-nav" aria-label="بررسی">
-          <NavLink to="/intake">ورود متن</NavLink>
-          <NavLink to="/review">
-            صف بررسی
-            <span className="rail-count">{pending}</span>
-          </NavLink>
-        </nav>
-
-        <nav className="rail-nav" aria-label="تنظیمات">
-          <p className="rail-label">تنظیمات</p>
-          <NavLink to="/settings/manufacturers">تولیدکنندگان</NavLink>
-          <NavLink to="/settings/products">محصولات</NavLink>
-          <NavLink to="/settings/sources">منابع</NavLink>
-          <NavLink to="/settings/ai">هوش مصنوعی</NavLink>
-        </nav>
-
         <div className="rail-foot">
-          <span className="rail-status">وب‌سایت مصرف‌کننده نیست</span>
-          <span>هویت کالا از وب‌سایت می‌آید</span>
+          <span className="rail-status">انتشار خودکار خاموش</span>
+          <span className={apiOk === false ? "rail-status is-down" : "rail-status"}>
+            {apiOk === false ? "پشت‌صحنه خاموش است" : apiOk ? "پشت‌صحنه روشن است" : "در حال بررسی پشت‌صحنه…"}
+          </span>
+          <span>قیمت روز با دکمه به‌روزرسانی پر می‌شود</span>
         </div>
       </aside>
 
       <div className="workspace">
         <p className="preview-strip">{MOCK_NOTICE}</p>
+        <ApiHealthBar ok={apiOk} />
+        <IdentityNoticeBar />
+        <div className="workspace-bar">
+          <button
+            className="btn primary"
+            type="button"
+            disabled={busy || apiOk === false}
+            onClick={() => void runUpdate(categoryScopeFromPath(pathname))}
+          >
+            {busy ? "در حال به‌روزرسانی…" : "به‌روزرسانی قیمت"}
+          </button>
+          <button className="btn" type="button" disabled={busy || apiOk === false} onClick={() => setManualOpen(true)}>
+            ورود دستی
+          </button>
+          {note ? <p className="workspace-bar-note">{note}</p> : null}
+          {error ? <p className="workspace-bar-error">{error}</p> : null}
+          {report.length ? (
+            <ul className="workspace-bar-report">
+              {report.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
         <Outlet />
       </div>
+      {manualOpen ? <ManualIntakeModal onClose={() => setManualOpen(false)} /> : null}
     </div>
   );
 }

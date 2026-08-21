@@ -2,24 +2,24 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 const COPY: Record<string, { kicker: string; title: string; note: string }> = {
   "/settings/manufacturers": {
-    kicker: "تنظیمات کاتالوگ",
+    kicker: "تنظیمات",
     title: "تولیدکنندگان",
     note: "کالا و برند حذف نمی‌شوند. فقط تگ محصول×برند وصل یا قطع می‌شود.",
   },
   "/settings/products": {
-    kicker: "تنظیمات کاتالوگ",
+    kicker: "تنظیمات",
     title: "محصولات",
-    note: "ماتریس کالا مطابق کاتالوگ است. ستون خالی و SKU نمایش داده نمی‌شود.",
+    note: "گروه را از تب بالا انتخاب کنید. ستون‌ها فقط داده همان گروه را نشان می‌دهند.",
   },
   "/settings/sources": {
-    kicker: "تنظیمات دریافت",
+    kicker: "تنظیمات",
     title: "منابع",
-    note: "منبع به دسته وصل می‌شود. انتشار خودکار خاموش است. اتصال زنده سایت، تلگرام و بله هنوز فعال نیست.",
+    note: "اول گروه، بعد دسته را انتخاب کنید. جدول فقط منابع همان دسته را نشان می‌دهد.",
   },
-  "/settings/ai": {
-    kicker: "تنظیمات استخراج",
-    title: "هوش مصنوعی",
-    note: "کلید فقط روی سرور است. خروجی مدل بدون تطبیق کاتالوگ منتشر نمی‌شود.",
+  "/settings/keys": {
+    kicker: "تنظیمات",
+    title: "کلیدها و زمان‌بندی",
+    note: "کلیدها روی سرور می‌مانند. ساعت و روز به‌روزرسانی خودکار را اینجا بگذارید.",
   },
 };
 
@@ -39,7 +39,7 @@ export function SettingsLayout() {
         <NavLink to="/settings/manufacturers">تولیدکنندگان</NavLink>
         <NavLink to="/settings/products">محصولات</NavLink>
         <NavLink to="/settings/sources">منابع</NavLink>
-        <NavLink to="/settings/ai">هوش مصنوعی</NavLink>
+        <NavLink to="/settings/keys">کلیدها و زمان‌بندی</NavLink>
       </nav>
       <Outlet />
     </section>

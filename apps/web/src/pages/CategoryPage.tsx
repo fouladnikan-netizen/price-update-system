@@ -1,8 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { BrandTabs } from "../components/BrandTabs";
 import { DetailsModal } from "../components/DetailsModal";
 import { PriceTable } from "../components/PriceTable";
+import { useDailyPrices } from "../intake/DailyPriceState";
+import { datesInStore } from "../intake/dailyPriceStore";
+import { tehranJalaliKey, tehranJalaliLabel } from "../intake/dates";
 import { getCategoryBrands } from "../mock/category-brands";
 import {
   HASH_VARIANT_TABS,
@@ -12,7 +15,7 @@ import {
   productSizeColumnLabel,
   type CatalogProduct,
 } from "../mock/catalog";
-import { MOCK_DATES, getProductCategory, getProductGroup } from "../mock/data";
+import { getProductCategory, getProductGroup } from "../mock/data";
 import { useProducerState } from "../settings/ProducerState";
 
 export function CategoryPage() {
@@ -22,10 +25,23 @@ export function CategoryPage() {
   const brands = getCategoryBrands(groupCode, categoryCode);
   const hashCategory = isHashCategory(groupCode, categoryCode);
   const { isBrandActive } = useProducerState();
-  const [dateIndex, setDateIndex] = useState(MOCK_DATES.length - 1);
-  const [brandId, setBrandId] = useState<"all" | string>(hashCategory ? "light" : "all");
+  const { prices, lookup } = useDailyPrices();
+  const dateKeys = useMemo(() => {
+    const today = tehranJalaliKey();
+    const stored = datesInStore(prices);
+    return stored.includes(today) ? stored : [...stored, today];
+  }, [prices]);
+  const [dateIndex, setDateIndex] = useState(0);
+  const [brandId, setBrandId] = useState<"all" | string>(hashCategory ? "light" : brands[0]?.id ?? "all");
   const [detailsProduct, setDetailsProduct] = useState<CatalogProduct | null>(null);
-  const dateLabel = MOCK_DATES[dateIndex];
+  const userPickedBrand = useRef(false);
+
+  useEffect(() => {
+    setDateIndex(Math.max(0, dateKeys.length - 1));
+  }, [dateKeys.length]);
+
+  const dateKey = dateKeys[dateIndex] ?? tehranJalaliKey();
+  const dateLabel = dateKey === tehranJalaliKey() ? tehranJalaliLabel() : dateKey;
   const activeBrand = hashCategory
     ? HASH_VARIANT_TABS.find((item) => item.id === brandId)
     : brands.find((brand) => brand.id === brandId);
@@ -38,8 +54,21 @@ export function CategoryPage() {
   }, [groupCode, categoryCode, brandId, activeBrand, hashCategory, isBrandActive]);
 
   useEffect(() => {
-    setBrandId(isHashCategory(groupCode, categoryCode) ? "light" : "all");
+    userPickedBrand.current = false;
+    setBrandId(isHashCategory(groupCode, categoryCode) ? "light" : getCategoryBrands(groupCode, categoryCode)[0]?.id ?? "all");
   }, [groupCode, categoryCode]);
+
+  useEffect(() => {
+    if (hashCategory || userPickedBrand.current) return;
+    const hasPrice = (id: string) =>
+      prices.some(
+        (item) =>
+          item.date === dateKey && item.brandId === id && (item.factoryPrice != null || item.warehousePrice != null),
+      );
+    if (brandId !== "all" && hasPrice(brandId)) return;
+    const millWithPrice = brands.find((brand) => hasPrice(brand.id));
+    if (millWithPrice) setBrandId(millWithPrice.id);
+  }, [brandId, brands, dateKey, hashCategory, prices]);
 
   if (!group) {
     return <Navigate to="/category/rebar" replace />;
@@ -51,6 +80,7 @@ export function CategoryPage() {
 
   const heading = category ? `${group.nameFa} · ${category.nameFa}` : group.nameFa;
   const brandLabel = activeBrand?.name ?? (hashCategory ? "هاش سبک" : "همه برندها");
+  const lookupBrandId = hashCategory || brandId === "all" ? null : brandId;
 
   return (
     <section className="desk">
@@ -67,7 +97,7 @@ export function CategoryPage() {
           <button
             className="btn"
             type="button"
-            onClick={() => setDateIndex((value) => Math.min(MOCK_DATES.length - 1, value + 1))}
+            onClick={() => setDateIndex((value) => Math.min(dateKeys.length - 1, value + 1))}
           >
             روز بعد
           </button>
@@ -83,23 +113,54 @@ export function CategoryPage() {
             <BrandTabs
               brands={HASH_VARIANT_TABS}
               brandId={brandId}
-              onChange={setBrandId}
+              onChange={(id) => {
+                userPickedBrand.current = true;
+                setBrandId(id);
+              }}
               showAll={false}
               ariaLabel="حالت تیرآهن هاش"
             />
           ) : (
             <>
-              <BrandTabs brands={brands} brandId={brandId} onChange={setBrandId} />
+              <BrandTabs
+                brands={brands}
+                brandId={brandId}
+                onChange={(id) => {
+                  userPickedBrand.current = true;
+                  setBrandId(id);
+                }}
+              />
               {brands.length === 0 ? (
                 <p className="brand-empty">این دسته در خروجی وب‌سایت فهرست برند ندارد. نبود تب برند خطا نیست.</p>
               ) : null}
             </>
           )}
+          {brandId === "all" && !hashCategory ? (
+            <p className="muted" style={{ margin: "0 0 12px" }}>
+              تب همه برندها قیمت کارخانه‌ها را مخلوط نمی‌کند. یک کارخانه را انتخاب کنید.
+            </p>
+          ) : null}
+          {!prices.some((item) => item.date === dateKey) ? (
+            <p className="muted" style={{ margin: "0 0 12px" }}>
+              قیمت این روز هنوز ثبت نشده. دکمهٔ به‌روزرسانی قیمت را بزنید. سلول خالی یعنی ناموجود است، نه صفر.
+            </p>
+          ) : null}
           <PriceTable
             products={products}
             brandLabel={brandLabel}
             sizeColumnLabel={productSizeColumnLabel(groupCode, categoryCode)}
             onDetails={setDetailsProduct}
+            resolvePrice={(product) => {
+              if (!lookupBrandId) return null;
+              const row = lookup(product.sku, lookupBrandId, dateKey);
+              if (!row) return null;
+              return {
+                factoryPrice: row.factoryPrice,
+                factorySource: row.factorySource,
+                warehousePrice: row.warehousePrice,
+                warehouseSource: row.warehouseSource,
+              };
+            }}
           />
         </>
       ) : (
@@ -116,7 +177,9 @@ export function CategoryPage() {
         </article>
       )}
 
-      {detailsProduct ? <DetailsModal product={detailsProduct} onClose={() => setDetailsProduct(null)} /> : null}
+      {detailsProduct ? (
+        <DetailsModal product={detailsProduct} brandId={lookupBrandId} date={dateKey} onClose={() => setDetailsProduct(null)} />
+      ) : null}
     </section>
   );
 }

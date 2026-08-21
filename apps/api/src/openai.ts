@@ -1,5 +1,14 @@
 import { getAiConfig } from "./env.ts";
 
+export type ChatContentPart =
+  | { type: "text"; text: string }
+  | { type: "image_url"; image_url: { url: string } };
+
+export type ChatMessage = {
+  role: "system" | "user";
+  content: string | ChatContentPart[];
+};
+
 export class AiGatewayError extends Error {
   constructor(
     message: string,
@@ -10,7 +19,9 @@ export class AiGatewayError extends Error {
   }
 }
 
-export async function completeJson(messages: Array<{ role: "system" | "user"; content: string }>): Promise<unknown> {
+const AI_TIMEOUT_MS = 180_000;
+
+export async function completeJson(messages: ChatMessage[], timeoutMs = AI_TIMEOUT_MS): Promise<unknown> {
   const config = getAiConfig();
   if (!config.configured) {
     throw new AiGatewayError("کلید یا آدرس سرویس هوش مصنوعی تنظیم نشده است.");
@@ -22,24 +33,29 @@ export async function completeJson(messages: Array<{ role: "system" | "user"; co
     messages,
   };
 
-  let response = await fetch(`${config.baseUrl}/chat/completions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${config.apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ ...requestBody, response_format: { type: "json_object" } }),
-  });
+  async function post(body: unknown): Promise<Response> {
+    try {
+      return await fetch(`${config.baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${config.apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+    } catch (error) {
+      if (error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")) {
+        throw new AiGatewayError("پاسخ هوش مصنوعی بیش از حد طول کشید.");
+      }
+      throw error;
+    }
+  }
+
+  let response = await post({ ...requestBody, response_format: { type: "json_object" } });
 
   if (response.status === 400) {
-    response = await fetch(`${config.baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+    response = await post(requestBody);
   }
 
   const text = await response.text();

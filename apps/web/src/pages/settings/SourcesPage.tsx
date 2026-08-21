@@ -1,23 +1,22 @@
 import { useMemo, useState, type FormEvent } from "react";
+import { BrandTabs } from "../../components/BrandTabs";
 import { getCategoryBrands } from "../../mock/category-brands";
-import { PRODUCT_GROUPS } from "../../mock/data";
+import { PRODUCT_GROUPS, getProductGroup } from "../../mock/data";
+import { SourceFormDialog } from "../../settings/SourceFormDialog";
 import { useSourceState } from "../../settings/SourceState";
+import { ResizableTable, ResizableTh } from "../../tables/ResizableTh";
 import {
-  addressFieldCopy,
-  INTAKE_MODES,
-  PRICE_COVERAGES,
-  SOURCE_TYPES,
-  categoryScopeLabel,
-  emptySourceInput,
+  identityStatusLabel,
   inputFromSource,
   intakeModeLabel,
-  needsAddress,
   priceCoverageLabel,
+  sourceInputForScope,
   sourceTypeLabel,
   type PriceSource,
   type SourceInput,
-  type SourceType,
 } from "../../settings/sourceStore";
+
+const GROUP_TABS = PRODUCT_GROUPS.map((group) => ({ id: group.code, name: group.nameFa }));
 
 export function SourcesPage() {
   const { sources, saveSource, setActive, remove } = useSourceState();
@@ -25,16 +24,37 @@ export function SourcesPage() {
   const [editingId, setEditingId] = useState<string | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [scopeFilter, setScopeFilter] = useState("all");
+  const [selectedGroup, setSelectedGroup] = useState(PRODUCT_GROUPS[0]?.code ?? "rebar");
+  const [selectedCategory, setSelectedCategory] = useState(
+    PRODUCT_GROUPS[0]?.categories[0]?.code ?? "ribbed",
+  );
 
-  const visible = useMemo(() => {
-    if (scopeFilter === "all") return sources;
-    const [groupCode, categoryCode] = scopeFilter.split("/");
-    return sources.filter((item) => item.groupCode === groupCode && item.categoryCode === categoryCode);
-  }, [scopeFilter, sources]);
+  const group = getProductGroup(selectedGroup) ?? PRODUCT_GROUPS[0];
+  const categoryTabs = (group?.categories ?? []).map((category) => ({
+    id: category.code,
+    name: category.nameFa,
+  }));
+  const categoryName =
+    group?.categories.find((category) => category.code === selectedCategory)?.nameFa ?? selectedCategory;
+
+  const visible = useMemo(
+    () =>
+      sources.filter(
+        (item) => item.groupCode === selectedGroup && item.categoryCode === selectedCategory,
+      ),
+    [selectedCategory, selectedGroup, sources],
+  );
+
+  function selectGroup(groupId: string) {
+    if (groupId === selectedGroup) return;
+    const nextGroup = getProductGroup(groupId);
+    const nextCategory = nextGroup?.categories[0]?.code ?? "";
+    setSelectedGroup(groupId);
+    setSelectedCategory(nextCategory);
+  }
 
   function openCreate() {
-    setDraft(emptySourceInput());
+    setDraft(sourceInputForScope(selectedGroup, selectedCategory));
     setEditingId(undefined);
     setError(null);
   }
@@ -68,6 +88,8 @@ export function SourcesPage() {
       return;
     }
     setMessage(editingId ? "ساختار منبع به‌روز شد. اتصال خودکار هنوز فعال نیست." : "منبع ثبت شد. کالا یا برند جدید ساخته نشد.");
+    setSelectedGroup(draft.groupCode);
+    setSelectedCategory(draft.categoryCode);
     setDraft(null);
     setEditingId(undefined);
     setError(null);
@@ -81,40 +103,41 @@ export function SourcesPage() {
 
   return (
     <>
+      <BrandTabs
+        brands={GROUP_TABS}
+        brandId={selectedGroup}
+        onChange={selectGroup}
+        showAll={false}
+        ariaLabel="گروه‌های کالا"
+      />
+      <BrandTabs
+        brands={categoryTabs}
+        brandId={selectedCategory}
+        onChange={setSelectedCategory}
+        showAll={false}
+        ariaLabel={`دسته‌های ${group?.nameFa ?? ""}`}
+      />
       <div className="sheet-meta settings-toolbar">
-        <div className="bulk-bar">
-          <span>{visible.length.toLocaleString("fa-IR")} منبع</span>
-          <select value={scopeFilter} onChange={(event) => setScopeFilter(event.target.value)} aria-label="فیلتر دسته">
-            <option value="all">همه دسته‌ها</option>
-            {PRODUCT_GROUPS.flatMap((group) =>
-              group.categories.map((category) => (
-                <option key={`${group.code}/${category.code}`} value={`${group.code}/${category.code}`}>
-                  {group.nameFa} · {category.nameFa}
-                </option>
-              )),
-            )}
-          </select>
+        <span>
+          {group?.nameFa} · {categoryName} · {visible.length.toLocaleString("fa-IR")} منبع
+        </span>
+        <div className="btn-row">
+          <button className="btn primary" type="button" onClick={openCreate}>
+            تعریف منبع
+          </button>
         </div>
-        <button className="btn primary" type="button" onClick={openCreate}>
-          تعریف منبع
-        </button>
       </div>
       {message ? <p className="settings-banner">{message}</p> : null}
 
       <div className="sheet table-wrap">
-        <table className="price-table settings-table">
+        <ResizableTable id="sources" className="price-table settings-table">
           <thead>
             <tr>
-              <th>نام</th>
-              <th>نوع</th>
-              <th>دسته</th>
-              <th>آدرس</th>
-              <th>نوع قیمت</th>
-              <th>زمان دریافت</th>
-              <th>برندها</th>
-              <th>وضعیت</th>
-              <th>انتشار خودکار</th>
-              <th></th>
+              <ResizableTh id="name">منبع</ResizableTh>
+              <ResizableTh id="address">آدرس و هویت</ResizableTh>
+              <ResizableTh id="coverage">پوشش</ResizableTh>
+              <ResizableTh id="status">وضعیت</ResizableTh>
+              <ResizableTh id="actions" className="col-action"></ResizableTh>
             </tr>
           </thead>
           <tbody>
@@ -123,35 +146,62 @@ export function SourcesPage() {
                 <tr key={source.id}>
                   <td>
                     <strong>{source.name}</strong>
+                    <div className="muted">{sourceTypeLabel(source.sourceType)}</div>
                   </td>
-                  <td>{sourceTypeLabel(source.sourceType)}</td>
-                  <td>{categoryScopeLabel(source.groupCode, source.categoryCode)}</td>
-                  <td>{source.address || "—"}</td>
-                  <td>{priceCoverageLabel(source.priceCoverage)}</td>
-                  <td>{intakeModeLabel(source.intakeMode)}</td>
-                  <td>{source.brandIds.length.toLocaleString("fa-IR")} برند دسته</td>
+                  <td className="cell-wrap">
+                    <div>{source.address || source.officialName || "—"}</div>
+                    {source.officialName && source.address ? (
+                      <div className="muted">{source.officialName}</div>
+                    ) : null}
+                    <div className="muted">{identityStatusLabel(source.identityStatus)}</div>
+                  </td>
+                  <td>
+                    {priceCoverageLabel(source.priceCoverage)}
+                    <div className="muted">
+                      {source.taxMode === "includes_vat"
+                        ? "با مالیات — ۱۰٪ جدا می‌شود"
+                        : source.taxMode === "excludes_vat"
+                          ? "بدون مالیات"
+                          : "مالیات خودکار"}
+                    </div>
+                    <div className="muted">
+                      {source.brandIds.length.toLocaleString("fa-IR")} برند · {intakeModeLabel(source.intakeMode)}
+                    </div>
+                  </td>
                   <td>
                     <span className={`badge ${source.isActive ? "success" : ""}`}>
                       {source.isActive ? "فعال" : "غیرفعال"}
                     </span>
+                    <div className="muted">انتشار خودکار خاموش</div>
                   </td>
-                  <td>
-                    <span className="badge warning">خاموش</span>
-                  </td>
-                  <td>
-                    <div className="btn-row">
-                      <button className="btn slim" type="button" onClick={() => openEdit(source)}>
-                        ویرایش
+                  <td className="col-action">
+                    <div className="icon-actions">
+                      <button
+                        className="icon-action"
+                        type="button"
+                        title="ویرایش"
+                        aria-label={`ویرایش ${source.name}`}
+                        onClick={() => openEdit(source)}
+                      >
+                        <PencilIcon />
                       </button>
                       <button
-                        className="btn slim"
+                        className={`icon-action ${source.isActive ? "is-on" : "is-off"}`}
                         type="button"
+                        title={source.isActive ? "غیرفعال کردن" : "فعال کردن"}
+                        aria-label={source.isActive ? `غیرفعال کردن ${source.name}` : `فعال کردن ${source.name}`}
                         onClick={() => setActive(source.id, !source.isActive)}
                       >
-                        {source.isActive ? "غیرفعال" : "فعال"}
+                        <EyeIcon />
                       </button>
-                      <button className="btn slim danger" type="button" onClick={() => confirmRemove(source)}>
-                        حذف
+                      <button
+                        className="icon-action is-off"
+                        type="button"
+                        title="حذف"
+                        aria-label={`حذف ${source.name}`}
+                        onClick={() => confirmRemove(source)}
+                      >
+                        <TrashIcon />
                       </button>
                     </div>
                   </td>
@@ -159,13 +209,13 @@ export function SourcesPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={10} className="muted">
-                  هنوز منبعی برای این محدوده تعریف نشده است. سایت، تلگرام و بله فعلاً فقط به‌صورت تعریف منبع ثبت می‌شوند.
+                <td colSpan={5} className="muted">
+                  هنوز منبعی برای این دسته تعریف نشده است. سایت یا کانال عمومی با آدرس ثبت کنید.
                 </td>
               </tr>
             )}
           </tbody>
-        </table>
+        </ResizableTable>
       </div>
 
       {draft ? (
@@ -187,184 +237,48 @@ export function SourcesPage() {
   );
 }
 
-function SourceFormDialog({
-  draft,
-  editing,
-  error,
-  onChange,
-  onChangeScope,
-  onClose,
-  onSubmit,
-}: {
-  draft: SourceInput;
-  editing: boolean;
-  error: string | null;
-  onChange: (next: SourceInput) => void;
-  onChangeScope: (value: string) => void;
-  onClose: () => void;
-  onSubmit: (event: FormEvent) => void;
-}) {
-  const brands = getCategoryBrands(draft.groupCode, draft.categoryCode);
-  const showAddress = needsAddress(draft.sourceType);
-  const addressCopy = addressFieldCopy(draft.sourceType);
-
-  function toggleBrand(id: string) {
-    onChange({
-      ...draft,
-      brandIds: draft.brandIds.includes(id)
-        ? draft.brandIds.filter((item) => item !== id)
-        : [...draft.brandIds, id],
-    });
-  }
-
+function PencilIcon() {
   return (
-    <div className="drawer-backdrop" onClick={onClose} role="presentation">
-      <div
-        className="popup popup-wide"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="source-form-title"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <header className="drawer-head">
-          <div>
-            <p className="kicker">ساختار منبع</p>
-            <h2 id="source-form-title">{editing ? "ویرایش منبع" : "تعریف منبع"}</h2>
-          </div>
-          <button className="btn ghost" type="button" onClick={onClose}>
-            بستن
-          </button>
-        </header>
-        <p className="muted">
-          منبع به دسته وصل می‌شود، نه به ساخت کالای جدید. رمز تلگرام، بله و کلید API اینجا ذخیره نمی‌شود. انتشار
-          خودکار خاموش است.
-        </p>
-        <form className="settings-form" onSubmit={onSubmit}>
-          <label>
-            نام منبع
-            <input
-              value={draft.name}
-              onChange={(event) => onChange({ ...draft, name: event.target.value })}
-              required
-            />
-          </label>
-          <label>
-            نوع منبع
-            <select
-              value={draft.sourceType}
-              onChange={(event) => onChange({ ...draft, sourceType: event.target.value as SourceType })}
-            >
-              {SOURCE_TYPES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            دسته مرتبط
-            <select value={`${draft.groupCode}/${draft.categoryCode}`} onChange={(event) => onChangeScope(event.target.value)}>
-              {PRODUCT_GROUPS.flatMap((group) =>
-                group.categories.map((category) => (
-                  <option key={`${group.code}/${category.code}`} value={`${group.code}/${category.code}`}>
-                    {group.nameFa} · {category.nameFa}
-                  </option>
-                )),
-              )}
-            </select>
-          </label>
-          <label>
-            {addressCopy.label}
-            <input
-              value={draft.address}
-              onChange={(event) => onChange({ ...draft, address: event.target.value })}
-              required={showAddress}
-              placeholder={addressCopy.placeholder}
-            />
-          </label>
-          <label>
-            نوع قیمت
-            <select
-              value={draft.priceCoverage}
-              onChange={(event) => onChange({ ...draft, priceCoverage: event.target.value as SourceInput["priceCoverage"] })}
-            >
-              {PRICE_COVERAGES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            زمان دریافت
-            <select
-              value={draft.intakeMode}
-              onChange={(event) => onChange({ ...draft, intakeMode: event.target.value as SourceInput["intakeMode"] })}
-            >
-              {INTAKE_MODES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <fieldset className="brand-fieldset">
-            <legend>برندهای قابل پوشش</legend>
-            <p className="muted">فقط برندهای ثبت‌شده همین دسته. خالی یعنی منبع بدون تگ برند است، نه ساخت برند جدید.</p>
-            <div className="filter-menu-actions">
-              <button
-                type="button"
-                className="btn slim"
-                onClick={() => onChange({ ...draft, brandIds: brands.map((item) => item.id) })}
-              >
-                همه برندهای دسته
-              </button>
-              <button type="button" className="btn slim" onClick={() => onChange({ ...draft, brandIds: [] })}>
-                هیچ‌کدام
-              </button>
-            </div>
-            {brands.length ? (
-              <ul className="picker-list">
-                {brands.map((brand) => (
-                  <li key={brand.id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={draft.brandIds.includes(brand.id)}
-                        onChange={() => toggleBrand(brand.id)}
-                      />
-                      <span>{brand.name}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="muted">این دسته در خروجی وب‌سایت برند ندارد.</p>
-            )}
-          </fieldset>
-          <label className="inline-check">
-            <input
-              type="checkbox"
-              checked={draft.isActive}
-              onChange={(event) => onChange({ ...draft, isActive: event.target.checked })}
-            />
-            منبع فعال است
-          </label>
-          <label className="inline-check">
-            <input type="checkbox" checked={false} disabled />
-            انتشار خودکار — در پایلوت خاموش و قفل است
-          </label>
-          {error ? <p className="settings-error">{error}</p> : null}
-          <div className="btn-row">
-            <button className="btn primary" type="submit">
-              ثبت منبع
-            </button>
-            <button className="btn ghost" type="button" onClick={onClose}>
-              انصراف
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden>
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.8 3.7a2.1 2.1 0 0 1 3 3L8 18.5 3.5 20l1.5-4.5L16.8 3.7zM13.5 6.8l3.7 3.7"
+      />
+    </svg>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden>
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.5 12s3.6-7 9.5-7 9.5 7 9.5 7-3.6 7-9.5 7-9.5-7-9.5-7z"
+      />
+      <circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden>
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"
+      />
+    </svg>
   );
 }

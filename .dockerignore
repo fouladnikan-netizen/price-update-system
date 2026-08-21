@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+.git
+.local
+.env
+.env.*
+!.env.example
+data/raw-inputs/*
+!data/raw-inputs/.gitkeep
+data/applied-prices/*
+!data/applied-prices/.gitkeep
+apps/web/dist
+*.session
+*.session-journal
+.DS_Store

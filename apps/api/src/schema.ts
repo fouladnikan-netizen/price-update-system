@@ -1,3 +1,5 @@
+import { parsePriceNumber } from "./numbers.ts";
+
 export type ExtractedItemDraft = {
   raw_text: string;
   suggested_product_code: string | null;
@@ -7,7 +9,7 @@ export type ExtractedItemDraft = {
   size: string | null;
   factory_price: number | null;
   warehouse_price: number | null;
-  unit: "toman_per_kg" | "rial_per_kg" | "unknown" | null;
+  unit: "toman_per_kg" | "rial_per_kg" | "toman_per_bar" | "unknown" | null;
   confidence: number;
   notes: string | null;
 };
@@ -26,7 +28,7 @@ function asString(value: unknown): string | null {
 }
 
 function asUnit(value: unknown): ExtractedItemDraft["unit"] {
-  if (value === "toman_per_kg" || value === "rial_per_kg" || value === "unknown") return value;
+  if (value === "toman_per_kg" || value === "rial_per_kg" || value === "toman_per_bar" || value === "unknown") return value;
   return null;
 }
 
@@ -48,8 +50,8 @@ export function parseModelExtract(raw: unknown): ModelExtractResult {
       suggested_brand_name: asString(item.suggested_brand_name),
       grade: asString(item.grade),
       size: asString(item.size),
-      factory_price: typeof item.factory_price === "number" ? item.factory_price : null,
-      warehouse_price: typeof item.warehouse_price === "number" ? item.warehouse_price : null,
+      factory_price: parsePriceNumber(item.factory_price),
+      warehouse_price: parsePriceNumber(item.warehouse_price),
       unit: asUnit(item.unit),
       confidence: Math.min(1, Math.max(0, confidence)),
       notes: asString(item.notes),

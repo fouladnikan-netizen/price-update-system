@@ -6,7 +6,8 @@ export type ObservationStatus =
   | "rejected"
   | "needs_more_review"
   | "unmatched"
-  | "suspicious";
+  | "suspicious"
+  | "archived";
 
 export type MockBrand = {
   id: string;
@@ -369,7 +370,7 @@ export const MOCK_REVIEWS: ReviewItem[] = [
 
 export function formatToman(value: number | null): string {
   if (value == null) return "—";
-  return `${value.toLocaleString("fa-IR")} تومان`;
+  return `${value.toLocaleString("fa-IR")} ریال`;
 }
 
 export function statusLabel(status: ObservationStatus): string {
@@ -383,9 +384,11 @@ export function statusLabel(status: ObservationStatus): string {
     case "needs_more_review":
       return "نیازمند بررسی بیشتر";
     case "unmatched":
-      return "تطبیق‌نیافته";
+      return "خارج از کاتالوگ";
     case "suspicious":
-      return "مشکوک";
+      return "نیاز به تأیید تطبیق";
+    case "archived":
+      return "بایگانی منبع";
     default:
       return status;
   }
@@ -402,6 +405,8 @@ export function statusTone(status: ObservationStatus): "neutral" | "success" | "
     case "suspicious":
     case "unmatched":
       return "danger";
+    case "archived":
+      return "neutral";
     default:
       return "neutral";
   }

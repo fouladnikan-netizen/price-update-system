@@ -1,4 +1,5 @@
 import { CATEGORY_BRANDS, getCategoryBrands } from "../mock/category-brands";
+import { officialNameFromBrandFile } from "../mock/brandOfficial";
 import { getUiCategoryCode, productRecordKey, type CatalogProduct } from "../mock/catalog";
 import { getProductCategory, getProductGroup } from "../mock/data";
 
@@ -35,7 +36,7 @@ export function websiteManufacturers(): Manufacturer[] {
         groupCode,
         categoryCode,
         brandName: brand.name,
-        officialName: brand.name,
+        officialName: officialNameFromBrandFile(groupCode, categoryCode, brand.name),
         source: "website",
       });
     }
@@ -68,10 +69,13 @@ export function tagKey(productKey: string, brandId: string): string {
 }
 
 export function manufacturersWithOverrides(state: ProducerTagState): Manufacturer[] {
-  return websiteManufacturers().map((item) => ({
-    ...item,
-    officialName: state.officialNames[item.id] ?? item.officialName,
-  }));
+  return websiteManufacturers().map((item) => {
+    const override = state.officialNames[item.id]?.trim();
+    const fromFile = officialNameFromBrandFile(item.groupCode, item.categoryCode, item.brandName);
+    const officialName =
+      override && override !== item.brandName ? override : fromFile || override || "";
+    return { ...item, officialName };
+  });
 }
 
 export function manufacturersForCategory(

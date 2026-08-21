@@ -6,11 +6,22 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
-    "test": "tsx --test src/match.test.ts src/numbers.test.ts"
+    "test": "tsx --test src/match.test.ts src/numbers.test.ts src/collect.test.ts src/publish.test.ts src/htmlText.test.ts src/millPriceTable.test.ts src/extract.test.ts src/telegram.test.ts src/bale.test.ts src/botInbox.test.ts src/pricePolicy.test.ts src/opsStore.test.ts src/scheduledUpdate.test.ts",
+    "db:health": "tsx src/db-health.ts",
+    "db:migrate": "tsx src/migrate.ts",
+    "telegram:login": "tsx src/telegram-login.ts",
+    "bale:check": "tsx src/bale-check.ts",
+    "bale:login": "tsx src/bale-login.ts"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "@types/pg": "^8.23.1",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "balejs": "github:Zellias/balejs",
+    "pg": "^8.23.0",
+    "telegram": "^2.26.22"
   }
 }

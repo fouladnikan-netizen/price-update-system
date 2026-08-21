@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: price-update-postgres
+    environment:
+      POSTGRES_USER: price_update
+      POSTGRES_PASSWORD: price_update
+      POSTGRES_DB: price_update
+    volumes:
+      - price_update_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U price_update -d price_update"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: price-update-app
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://price_update:price_update@postgres:5432/price_update
+      AI_API_HOST: 0.0.0.0
+      AI_API_PORT: "8787"
+      PRICE_UPDATE_STATIC_DIR: /app/apps/web/dist
+    ports:
+      - "8787:8787"
+    volumes:
+      - price_update_raw:/app/data/raw-inputs
+      - price_update_applied:/app/data/applied-prices
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  price_update_pg:
+  price_update_raw:
+  price_update_applied:

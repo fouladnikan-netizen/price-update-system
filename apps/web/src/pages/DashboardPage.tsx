@@ -1,67 +1,49 @@
 import { Link } from "react-router-dom";
+import { useDailyPrices } from "../intake/DailyPriceState";
+import { tehranJalaliKey, tehranJalaliLabel } from "../intake/dates";
 import { countGroupProducts } from "../mock/catalog";
-import { MOCK_DASHBOARD, PRODUCT_GROUPS } from "../mock/data";
+import { PRODUCT_GROUPS } from "../mock/data";
+import { useSourceState } from "../settings/SourceState";
 
 export function DashboardPage() {
-  const pending = MOCK_DASHBOARD.pendingReviewCount.toLocaleString("fa-IR");
+  const { sources } = useSourceState();
+  const { prices } = useDailyPrices();
+  const activeSources = sources.filter((item) => item.isActive).length;
+  const today = tehranJalaliKey();
+  const todayCount = prices.filter((item) => item.date === today).length;
+  const latest = prices[0];
 
   return (
     <section className="desk">
       <header className="page-head">
         <div>
           <p className="kicker">میز کار امروز</p>
-          <h1>{MOCK_DASHBOARD.lastIngestAt.split(" — ")[0]}</h1>
+          <h1>{tehranJalaliLabel()}</h1>
         </div>
-        <p className="page-head-note">کالاها از خروجی وب‌سایت‌اند · قیمت روزانه هنوز غایب است و صفر نیست</p>
+        <p className="page-head-note">یک دکمه قیمت را از منابع می‌گیرد و در جدول همان روز می‌نویسد. سلول خالی یعنی ناموجود، نه صفر.</p>
       </header>
 
       <div className="desk-hero">
         <div className="desk-hero-copy">
-          <p className="kicker">کار باقی‌مانده</p>
-          <h2>
-            {pending} مورد در صف بررسی است
-          </h2>
+          <p className="kicker">وضعیت</p>
+          <h2>{todayCount ? `${todayCount.toLocaleString("fa-IR")} قیمت امروز ثبت شده` : "هنوز قیمت امروز ثبت نشده"}</h2>
           <p>
-            قیمت مشکوک بدون تأیید انسان منتشر نمی‌شود. تطبیق‌نیافته‌ها محصول جدید نمی‌سازند.
+            به‌روزرسانی قیمت را بزنید. ورود دستی برای متن یا تصویری است که منبع زنده ندارد. انتشار به وب‌سایت خودکار نیست.
           </p>
-          <div className="btn-row">
-            <Link className="btn primary" to="/review">
-              باز کردن صف بررسی
-            </Link>
-            <Link className="btn" to="/settings/sources">
-              تعریف منبع
-            </Link>
-          </div>
         </div>
         <dl className="desk-facts">
           <div>
-            <dt>آخرین ورود</dt>
-            <dd>{MOCK_DASHBOARD.lastIngestSource}</dd>
-            <dd className="muted">{MOCK_DASHBOARD.lastIngestAt}</dd>
-          </div>
-          <div>
-            <dt>انتشار خودکار</dt>
-            <dd>خاموش</dd>
-            <dd className="muted">فقط پس از تأیید انسان</dd>
+            <dt>آخرین ثبت</dt>
+            <dd>{latest ? latest.productCode : "—"}</dd>
+            <dd className="muted">{latest ? new Date(latest.updatedAt).toLocaleString("fa-IR") : "هنوز به‌روزرسانی نشده"}</dd>
           </div>
           <div>
             <dt>منابع فعال</dt>
-            <dd>{MOCK_DASHBOARD.sourceCount.toLocaleString("fa-IR")} منبع نمایشی</dd>
-            <dd className="muted">سایت، تلگرام، بله، فایل، ورود دستی</dd>
+            <dd>{activeSources.toLocaleString("fa-IR")} منبع</dd>
+            <dd className="muted">از تنظیمات منابع</dd>
           </div>
         </dl>
       </div>
-
-      <article className="category-strip">
-        <div>
-          <p className="kicker">منابع</p>
-          <h2>همه دسته‌های کاتالوگ</h2>
-          <p className="muted">لوله، تیرآهن، ورق و بقیه گروه‌ها منبع جدا دارند. کانال بله هم قابل تعریف است.</p>
-        </div>
-        <Link className="btn" to="/settings/sources">
-          رفتن به منابع
-        </Link>
-      </article>
 
       <ul className="group-index">
         {PRODUCT_GROUPS.map((group) => (

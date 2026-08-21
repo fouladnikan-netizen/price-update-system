@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { PRODUCT_GROUPS } from "../../mock/data";
 import { useProducerState } from "../../settings/ProducerState";
 import { categoryLabel } from "../../settings/producerStore";
+import { ResizableTable, ResizableTh } from "../../tables/ResizableTh";
 
 export function ManufacturersPage() {
   const { manufacturers, submitManufacturerForm } = useProducerState();
@@ -43,30 +44,28 @@ export function ManufacturersPage() {
       {message ? <p className="settings-banner">{message}</p> : null}
 
       <div className="sheet table-wrap">
-        <table className="price-table settings-table">
+        <ResizableTable id="manufacturers" className="price-table settings-table">
           <thead>
             <tr>
-              <th>کد یکتا</th>
-              <th>نام برند</th>
-              <th>نام رسمی</th>
-              <th>دسته محصول</th>
-              <th>منبع</th>
+              <ResizableTh id="brand">برند</ResizableTh>
+              <ResizableTh id="official">نام رسمی</ResizableTh>
+              <ResizableTh id="category">دسته</ResizableTh>
+              <ResizableTh id="code">کد</ResizableTh>
             </tr>
           </thead>
           <tbody>
             {manufacturers.map((item) => (
               <tr key={item.id}>
-                <td className="code">{item.id}</td>
-                <td>{item.brandName}</td>
-                <td>{item.officialName}</td>
-                <td>{categoryLabel(item.groupCode, item.categoryCode)}</td>
                 <td>
-                  <span className="badge success">وب‌سایت</span>
+                  <strong>{item.brandName}</strong>
                 </td>
+                <td>{item.officialName || "—"}</td>
+                <td>{categoryLabel(item.groupCode, item.categoryCode)}</td>
+                <td className="code cell-clip">{item.id}</td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </ResizableTable>
       </div>
 
       {open ? (

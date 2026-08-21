@@ -1,9 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { BrandTabs } from "../../components/BrandTabs";
 import {
   getAllCatalogProducts,
   getUiCategoryCode,
+  GROUP_DISPLAY_ORDER,
   type CatalogProduct,
 } from "../../mock/catalog";
+import { getProductGroup } from "../../mock/data";
 import {
   EXCEL_COLUMNS,
   catalogColumnRow,
@@ -13,10 +17,17 @@ import {
 } from "../../mock/catalogColumns";
 import { useProducerState } from "../../settings/ProducerState";
 import type { Manufacturer } from "../../settings/producerStore";
+import { ColumnResizeProvider, ResizableTh, useResizableTableClass } from "../../tables/ResizableTh";
 
 type FilterKey = keyof ExcelCatalogFields;
 type Filters = Partial<Record<FilterKey, string[]>>;
 type MatrixRow = { product: CatalogProduct; columns: ReturnType<typeof catalogColumnRow> };
+type GroupCode = (typeof GROUP_DISPLAY_ORDER)[number];
+
+const GROUP_TABS = GROUP_DISPLAY_ORDER.map((code) => ({
+  id: code,
+  name: getProductGroup(code)?.nameFa ?? code,
+}));
 
 function matchesFilters(columns: ExcelCatalogFields, filters: Filters, except?: FilterKey): boolean {
   return EXCEL_COLUMNS.every(({ key }) => {
@@ -41,18 +52,34 @@ export function ProductMatrixPage() {
   const products = useMemo(() => getAllCatalogProducts(), []);
   const rows = useMemo(() => products.map((product) => ({ product, columns: catalogColumnRow(product) })), [products]);
   const { activeForProduct, manufacturersInCategory, setTag, setTagsBulk } = useProducerState();
+  const [selectedGroup, setSelectedGroup] = useState<GroupCode>("rebar");
   const [filters, setFilters] = useState<Filters>({});
   const [openFilter, setOpenFilter] = useState<FilterKey | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [picker, setPicker] = useState<CatalogProduct | null>(null);
   const [bulkBrandId, setBulkBrandId] = useState("");
 
-  const visible = useMemo(
-    () => rows.filter(({ columns }) => matchesFilters(columns, filters)),
-    [filters, rows],
+  const groupRows = useMemo(
+    () => rows.filter(({ product }) => product.groupCode === selectedGroup),
+    [rows, selectedGroup],
   );
+  const visible = useMemo(
+    () => groupRows.filter(({ columns }) => matchesFilters(columns, filters)),
+    [filters, groupRows],
+  );
+  const tableColumns = visibleExcelColumns(groupRows.map(({ columns }) => columns));
+  const groupName = getProductGroup(selectedGroup)?.nameFa ?? selectedGroup;
 
-  const tableColumns = visibleExcelColumns(visible.map(({ columns }) => columns));
+  function selectGroup(groupId: string) {
+    const next = GROUP_DISPLAY_ORDER.find((code) => code === groupId);
+    if (!next || next === selectedGroup) return;
+    setSelectedGroup(next);
+    setFilters({});
+    setOpenFilter(null);
+    setSelected(new Set());
+    setBulkBrandId("");
+    setPicker(null);
+  }
   const selectedProducts = visible.filter(({ columns }) => selected.has(columns.key)).map((item) => item.product);
 
   const bulkBrands = useMemo(() => {
@@ -91,10 +118,17 @@ export function ProductMatrixPage() {
   }
 
   return (
-    <>
+    <ColumnResizeProvider tableId="product-matrix">
+      <BrandTabs
+        brands={GROUP_TABS}
+        brandId={selectedGroup}
+        onChange={selectGroup}
+        showAll={false}
+        ariaLabel="گروه‌های کالا"
+      />
       <div className="sheet-meta settings-toolbar">
         <span>
-          {visible.length.toLocaleString("fa-IR")} کالا · ستون‌ها مطابق کاتالوگ اکسل · سلول خالی و NULL نمایش داده نمی‌شود
+          {groupName} · {visible.length.toLocaleString("fa-IR")} کالا · ستون‌ها مطابق داده همین گروه
         </span>
         {selectedProducts.length ? (
           <div className="bulk-bar">
@@ -130,85 +164,20 @@ export function ProductMatrixPage() {
       </div>
 
       <div className="sheet table-wrap matrix-wrap">
-        <table className="price-table settings-table matrix-table">
-          <thead>
-            <tr>
-              <th className="col-check">
-                <input
-                  type="checkbox"
-                  checked={visible.length > 0 && visible.every(({ columns }) => selected.has(columns.key))}
-                  onChange={toggleAllVisible}
-                  aria-label="انتخاب همه ردیف‌های فیلترشده"
-                />
-              </th>
-              {tableColumns.map((column) => {
-                const options = uniqueColumnValues(
-                  rows.filter(({ columns }) => matchesFilters(columns, filters, column.key)),
-                  column.key,
-                );
-                return (
-                  <th key={column.key}>
-                    <div className="filter-pop">
-                      <button
-                        className={`filter-head ${filters[column.key] ? "is-on" : ""}`}
-                        type="button"
-                        onClick={() => setOpenFilter((current) => (current === column.key ? null : column.key))}
-                      >
-                        {column.label}
-                        <span aria-hidden>▾</span>
-                      </button>
-                      {openFilter === column.key ? (
-                        <ColumnFilterMenu
-                          options={options}
-                          applied={filters[column.key]}
-                          onApply={(selectedValues) => applyColumnFilter(column.key, selectedValues)}
-                          onClose={() => setOpenFilter(null)}
-                        />
-                      ) : null}
-                    </div>
-                  </th>
-                );
-              })}
-              <th>تولیدکنندگان</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map(({ product, columns }) => {
-              const active = activeForProduct(product);
-              const preview = active
-                .slice(0, 3)
-                .map((item) => item.brandName)
-                .join("، ");
-              return (
-                <tr key={columns.key}>
-                  <td className="col-check">
-                    <input
-                      type="checkbox"
-                      checked={selected.has(columns.key)}
-                      onChange={() => toggleRow(columns.key)}
-                      aria-label={`انتخاب ${product.name}`}
-                    />
-                  </td>
-                  {tableColumns.map((column) => (
-                    <td key={column.key}>{displayExcelValue(columns[column.key])}</td>
-                  ))}
-                  <td>
-                    <button className="producer-chip" type="button" onClick={() => setPicker(product)}>
-                      <span className="producer-icon" aria-hidden>
-                        ⚙
-                      </span>
-                      <span>
-                        {active.length.toLocaleString("fa-IR")} برند
-                        {preview ? ` · ${preview}` : ""}
-                        {active.length > 3 ? "…" : ""}
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <MatrixTable
+          visible={visible}
+          rows={groupRows}
+          filters={filters}
+          openFilter={openFilter}
+          selected={selected}
+          tableColumns={tableColumns}
+          activeForProduct={activeForProduct}
+          setOpenFilter={setOpenFilter}
+          applyColumnFilter={applyColumnFilter}
+          toggleAllVisible={toggleAllVisible}
+          toggleRow={toggleRow}
+          setPicker={setPicker}
+        />
       </div>
 
       {picker ? (
@@ -220,16 +189,176 @@ export function ProductMatrixPage() {
           onClose={() => setPicker(null)}
         />
       ) : null}
-    </>
+    </ColumnResizeProvider>
+  );
+}
+
+function MatrixTable({
+  visible,
+  rows,
+  filters,
+  openFilter,
+  selected,
+  tableColumns,
+  activeForProduct,
+  setOpenFilter,
+  applyColumnFilter,
+  toggleAllVisible,
+  toggleRow,
+  setPicker,
+}: {
+  visible: MatrixRow[];
+  rows: MatrixRow[];
+  filters: Filters;
+  openFilter: FilterKey | null;
+  selected: Set<string>;
+  tableColumns: ReturnType<typeof visibleExcelColumns>;
+  activeForProduct: (product: CatalogProduct) => Manufacturer[];
+  setOpenFilter: (value: FilterKey | null | ((current: FilterKey | null) => FilterKey | null)) => void;
+  applyColumnFilter: (key: FilterKey, selectedValues: string[] | undefined) => void;
+  toggleAllVisible: () => void;
+  toggleRow: (key: string) => void;
+  setPicker: (product: CatalogProduct) => void;
+}) {
+  const resizeClass = useResizableTableClass();
+  return (
+    <table className={`price-table settings-table matrix-table ${resizeClass}`}>
+      <thead>
+        <tr>
+          <ResizableTh id="check" className="col-check">
+            <input
+              type="checkbox"
+              checked={visible.length > 0 && visible.every(({ columns }) => selected.has(columns.key))}
+              onChange={toggleAllVisible}
+              aria-label="انتخاب همه ردیف‌های فیلترشده"
+            />
+          </ResizableTh>
+          {tableColumns.map((column) => {
+            const options = uniqueColumnValues(
+              rows.filter(({ columns }) => matchesFilters(columns, filters, column.key)),
+              column.key,
+            );
+            return (
+              <ResizableTh key={column.key} id={column.key}>
+                <ColumnFilter
+                  label={column.label}
+                  options={options}
+                  applied={filters[column.key]}
+                  open={openFilter === column.key}
+                  onToggle={() => setOpenFilter((current) => (current === column.key ? null : column.key))}
+                  onApply={(selectedValues) => applyColumnFilter(column.key, selectedValues)}
+                  onClose={() => setOpenFilter(null)}
+                />
+              </ResizableTh>
+            );
+          })}
+          <ResizableTh id="producers">تولیدکنندگان</ResizableTh>
+        </tr>
+      </thead>
+      <tbody>
+        {visible.length ? (
+          visible.map(({ product, columns }) => {
+          const active = activeForProduct(product);
+          const preview = active
+            .slice(0, 3)
+            .map((item) => item.brandName)
+            .join("، ");
+          return (
+            <tr key={columns.key}>
+              <td className="col-check">
+                <input
+                  type="checkbox"
+                  checked={selected.has(columns.key)}
+                  onChange={() => toggleRow(columns.key)}
+                  aria-label={`انتخاب ${product.name}`}
+                />
+              </td>
+              {tableColumns.map((column) => (
+                <td key={column.key} className={column.key === "name" ? "cell-wrap" : "cell-clip"}>
+                  {displayExcelValue(columns[column.key])}
+                </td>
+              ))}
+              <td>
+                <button className="producer-chip" type="button" onClick={() => setPicker(product)}>
+                  <span className="producer-icon" aria-hidden>
+                    ⚙
+                  </span>
+                  <span>
+                    {active.length.toLocaleString("fa-IR")} برند
+                    {preview ? ` · ${preview}` : ""}
+                    {active.length > 3 ? "…" : ""}
+                  </span>
+                </button>
+              </td>
+            </tr>
+          );
+          })
+        ) : (
+          <tr>
+            <td className="muted" colSpan={tableColumns.length + 2}>
+              در این گروه کالایی با فیلتر فعلی نیست.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  );
+}
+
+function ColumnFilter({
+  label,
+  options,
+  applied,
+  open,
+  onToggle,
+  onApply,
+  onClose,
+}: {
+  label: string;
+  options: string[];
+  applied: string[] | undefined;
+  open: boolean;
+  onToggle: () => void;
+  onApply: (selected: string[] | undefined) => void;
+  onClose: () => void;
+}) {
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  return (
+    <div className="filter-pop">
+      <button
+        ref={triggerRef}
+        className={`filter-head ${applied ? "is-on" : ""}`}
+        type="button"
+        onClick={onToggle}
+      >
+        {label}
+        <span className="filter-mark" aria-hidden>
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+      {open ? (
+        <ColumnFilterMenu
+          anchor={triggerRef.current}
+          options={options}
+          applied={applied}
+          onApply={onApply}
+          onClose={onClose}
+        />
+      ) : null}
+    </div>
   );
 }
 
 function ColumnFilterMenu({
+  anchor,
   options,
   applied,
   onApply,
   onClose,
 }: {
+  anchor: HTMLElement | null;
   options: string[];
   applied: string[] | undefined;
   onApply: (selected: string[] | undefined) => void;
@@ -238,6 +367,7 @@ function ColumnFilterMenu({
   const rootRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<Set<string>>(() => new Set(applied ?? options));
+  const [pos, setPos] = useState({ top: 0, left: 0 });
   const draftRef = useRef(draft);
   draftRef.current = draft;
 
@@ -251,21 +381,39 @@ function ColumnFilterMenu({
     else onApply([...next]);
   }
 
+  useLayoutEffect(() => {
+    const menu = rootRef.current;
+    const box = anchor?.getBoundingClientRect();
+    if (!menu || !box) return;
+    const width = menu.offsetWidth || 260;
+    const left = Math.min(Math.max(8, box.right - width), window.innerWidth - width - 8);
+    const top = Math.min(box.bottom + 6, window.innerHeight - menu.offsetHeight - 8);
+    setPos({ top: Math.max(8, top), left });
+  }, [anchor, options.length]);
+
   useEffect(() => {
     function onPointerDown(event: PointerEvent) {
-      const wrap = rootRef.current?.parentElement;
-      if (!wrap?.contains(event.target as Node)) commit(draftRef.current);
+      const target = event.target as Node;
+      if (rootRef.current?.contains(target) || anchor?.contains(target)) return;
+      commit(draftRef.current);
     }
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") onClose();
     }
+    function onReposition() {
+      onClose();
+    }
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onReposition);
+    document.addEventListener("scroll", onReposition, true);
     return () => {
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onReposition);
+      document.removeEventListener("scroll", onReposition, true);
     };
-  }, [onApply, onClose, options.length]);
+  }, [anchor, onApply, onClose, options.length]);
 
   function toggleValue(value: string) {
     setDraft((current) => {
@@ -287,8 +435,14 @@ function ColumnFilterMenu({
     });
   }
 
-  return (
-    <div className="filter-menu" ref={rootRef} role="dialog" aria-label="فیلتر ستون">
+  return createPortal(
+    <div
+      className="filter-menu is-fixed"
+      ref={rootRef}
+      role="dialog"
+      aria-label="فیلتر ستون"
+      style={{ top: pos.top, left: pos.left }}
+    >
       <input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
@@ -323,7 +477,8 @@ function ColumnFilterMenu({
           بستن
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
