@@ -1,0 +1,1453 @@
+{
+  "generatedAt": "2026-08-22T04:15:31.644Z",
+  "compositionalToWebsite": {
+    "RBR-A3-10": [
+      {
+        "websiteSku": "RBR-000010",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000051",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000074",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000062",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000099",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000112",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000126",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000138",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000158",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000174",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000199",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000211",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000248",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000224",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000235",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000268",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      }
+    ],
+    "RBR-A3-20": [
+      {
+        "websiteSku": "RBR-000037",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000048",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000005",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000015",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000026",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000056",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000087",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000095",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000079",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000067",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000104",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000131",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000143",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000117",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000153",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000179",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000172",
+        "brandName": "گروه ملی فولاد",
+        "brandKey": "گروه ملی فولاد"
+      },
+      {
+        "websiteSku": "RBR-000187",
+        "brandName": "آتیه خلیج فارس",
+        "brandKey": "اتیه خلیج فارس"
+      },
+      {
+        "websiteSku": "RBR-000163",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000193",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000204",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000229",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000216",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000240",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000253",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000262",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000282",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      },
+      {
+        "websiteSku": "RBR-000273",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      }
+    ],
+    "RBR-A3-16": [
+      {
+        "websiteSku": "RBR-000035",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000046",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000003",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000024",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000013",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000054",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000065",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000085",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000077",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000093",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000102",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000129",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000115",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000141",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000151",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000177",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000170",
+        "brandName": "گروه ملی فولاد",
+        "brandKey": "گروه ملی فولاد"
+      },
+      {
+        "websiteSku": "RBR-000161",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000191",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000185",
+        "brandName": "آتیه خلیج فارس",
+        "brandKey": "اتیه خلیج فارس"
+      },
+      {
+        "websiteSku": "RBR-000202",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000214",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000227",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000238",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000251",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000260",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000271",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      },
+      {
+        "websiteSku": "RBR-000280",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      }
+    ],
+    "RBR-A3-14": [
+      {
+        "websiteSku": "RBR-000034",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000045",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000023",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000002",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000012",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000053",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000076",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000084",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000092",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000064",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000101",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000128",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000140",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000114",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000150",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000160",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000184",
+        "brandName": "آتیه خلیج فارس",
+        "brandKey": "اتیه خلیج فارس"
+      },
+      {
+        "websiteSku": "RBR-000190",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000176",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000169",
+        "brandName": "گروه ملی فولاد",
+        "brandKey": "گروه ملی فولاد"
+      },
+      {
+        "websiteSku": "RBR-000201",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000213",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000226",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000250",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000237",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000259",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000270",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      },
+      {
+        "websiteSku": "RBR-000279",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      }
+    ],
+    "RBR-A3-18": [
+      {
+        "websiteSku": "RBR-000047",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000014",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000025",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000036",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000004",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000086",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000094",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000066",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000055",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000078",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000103",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000116",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000130",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000142",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000152",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000162",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000171",
+        "brandName": "گروه ملی فولاد",
+        "brandKey": "گروه ملی فولاد"
+      },
+      {
+        "websiteSku": "RBR-000186",
+        "brandName": "آتیه خلیج فارس",
+        "brandKey": "اتیه خلیج فارس"
+      },
+      {
+        "websiteSku": "RBR-000178",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000192",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000203",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000228",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000215",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000239",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000252",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000261",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000281",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      },
+      {
+        "websiteSku": "RBR-000272",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      }
+    ],
+    "RBR-A3-22": [
+      {
+        "websiteSku": "RBR-000027",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000038",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000049",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000006",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000016",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000057",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000088",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000068",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000096",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000080",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000105",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000118",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000144",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000132",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000154",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000194",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000164",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000188",
+        "brandName": "آتیه خلیج فارس",
+        "brandKey": "اتیه خلیج فارس"
+      },
+      {
+        "websiteSku": "RBR-000180",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000205",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000230",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000241",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000217",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000254",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000263",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000283",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      },
+      {
+        "websiteSku": "RBR-000274",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      }
+    ],
+    "RBR-A3-25": [
+      {
+        "websiteSku": "RBR-000039",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000007",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000050",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000028",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000017",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000058",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000089",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000069",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000097",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000081",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000106",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000133",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000145",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000119",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000155",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000165",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000195",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000189",
+        "brandName": "آتیه خلیج فارس",
+        "brandKey": "اتیه خلیج فارس"
+      },
+      {
+        "websiteSku": "RBR-000181",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000206",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000218",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000231",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000242",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000255",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000264",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000284",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      },
+      {
+        "websiteSku": "RBR-000275",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      }
+    ],
+    "RBR-A3-28": [
+      {
+        "websiteSku": "RBR-000040",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000029",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000008",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000018",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000082",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000090",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000070",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000059",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000107",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000120",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000134",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000146",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000156",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000166",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000196",
+        "brandName": "کاوه اروند",
+        "brandKey": "کاوه اروند"
+      },
+      {
+        "websiteSku": "RBR-000182",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000207",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000219",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000243",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000265",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      }
+    ],
+    "RBR-A3-32": [
+      {
+        "websiteSku": "RBR-000030",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000041",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000009",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000019",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000060",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000071",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000108",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000121",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000135",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000157",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000167",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000183",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000208",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000244",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000266",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      }
+    ],
+    "RBR-A3-12": [
+      {
+        "websiteSku": "RBR-000033",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000044",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000001",
+        "brandName": "ذوب آهن اصفهان",
+        "brandKey": "ذوب اهن اصفهان"
+      },
+      {
+        "websiteSku": "RBR-000022",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000011",
+        "brandName": "فولاد نیشابور",
+        "brandKey": "فولاد نیشابور"
+      },
+      {
+        "websiteSku": "RBR-000052",
+        "brandName": "فولاد ابرکوه",
+        "brandKey": "فولاد ابرکوه"
+      },
+      {
+        "websiteSku": "RBR-000063",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000083",
+        "brandName": "جهان فولاد سیرجان",
+        "brandKey": "جهان فولاد سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000091",
+        "brandName": "قائم رازی",
+        "brandKey": "قائم رازی"
+      },
+      {
+        "websiteSku": "RBR-000075",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000100",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000113",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000127",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000139",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000149",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000159",
+        "brandName": "فایکو",
+        "brandKey": "فایکو"
+      },
+      {
+        "websiteSku": "RBR-000200",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000175",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000168",
+        "brandName": "گروه ملی فولاد",
+        "brandKey": "گروه ملی فولاد"
+      },
+      {
+        "websiteSku": "RBR-000212",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000249",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000225",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000236",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000258",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000269",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      },
+      {
+        "websiteSku": "RBR-000278",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      }
+    ],
+    "RBR-A2-8": [
+      {
+        "websiteSku": "RBR-000031",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000042",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000020",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000072",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000122",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000109",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000147",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000197",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000220",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000232",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000245",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000256",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000267",
+        "brandName": "فولاد شاهرود",
+        "brandKey": "فولاد شاهرود"
+      },
+      {
+        "websiteSku": "RBR-000276",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      }
+    ],
+    "RBR-A2-10": [
+      {
+        "websiteSku": "RBR-000043",
+        "brandName": "ظفر بناب",
+        "brandKey": "ظفر بناب"
+      },
+      {
+        "websiteSku": "RBR-000021",
+        "brandName": "راد همدان",
+        "brandKey": "راد همدان"
+      },
+      {
+        "websiteSku": "RBR-000032",
+        "brandName": "شاهین بناب",
+        "brandKey": "شاهین بناب"
+      },
+      {
+        "websiteSku": "RBR-000073",
+        "brandName": "حدید سیرجان",
+        "brandKey": "حدید سیرجان"
+      },
+      {
+        "websiteSku": "RBR-000110",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000123",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000136",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000148",
+        "brandName": "آناهیتا",
+        "brandKey": "اناهیتا"
+      },
+      {
+        "websiteSku": "RBR-000198",
+        "brandName": "پرشین فولاد",
+        "brandKey": "پرشین فولاد"
+      },
+      {
+        "websiteSku": "RBR-000209",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000221",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000233",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      },
+      {
+        "websiteSku": "RBR-000246",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000257",
+        "brandName": "درپاد تبریز",
+        "brandKey": "درپاد تبریز"
+      },
+      {
+        "websiteSku": "RBR-000277",
+        "brandName": "عتیق آذر",
+        "brandKey": "عتیق اذر"
+      }
+    ],
+    "RBR-A3-8": [
+      {
+        "websiteSku": "RBR-000061",
+        "brandName": "فولاد بافق",
+        "brandKey": "فولاد بافق"
+      },
+      {
+        "websiteSku": "RBR-000098",
+        "brandName": "کویر کاشان",
+        "brandKey": "کویر کاشان"
+      },
+      {
+        "websiteSku": "RBR-000125",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000111",
+        "brandName": "کاوه تیکمه داش",
+        "brandKey": "کاوه تیکمه داش"
+      },
+      {
+        "websiteSku": "RBR-000173",
+        "brandName": "روهینا",
+        "brandKey": "روهینا"
+      },
+      {
+        "websiteSku": "RBR-000223",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      }
+    ],
+    "RBR-A2-12": [
+      {
+        "websiteSku": "RBR-000124",
+        "brandName": "آذر امین",
+        "brandKey": "اذر امین"
+      },
+      {
+        "websiteSku": "RBR-000137",
+        "brandName": "امیرکبیر خزر",
+        "brandKey": "امیرکبیر خزر"
+      },
+      {
+        "websiteSku": "RBR-000210",
+        "brandName": "آریان فولاد",
+        "brandKey": "اریان فولاد"
+      },
+      {
+        "websiteSku": "RBR-000247",
+        "brandName": "هیربد",
+        "brandKey": "هیربد"
+      },
+      {
+        "websiteSku": "RBR-000222",
+        "brandName": "فولاد ابهر",
+        "brandKey": "فولاد ابهر"
+      },
+      {
+        "websiteSku": "RBR-000234",
+        "brandName": "پردیس",
+        "brandKey": "پردیس"
+      }
+    ]
+  }
+}

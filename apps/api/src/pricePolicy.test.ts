@@ -39,8 +39,8 @@ test("adds the delta to every current price in that category with exact arithmet
   upsertAppliedPrices([
     {
       date: "1405/05/30",
-      productCode: "RBR-A2-10",
-      brandId: "rebar-ribbed-11",
+      productCode: "RBR-000001",
+      brandId: "rebar-ribbed-ذوب-اهن-اصفهان",
       brandName: "ذوب آهن اصفهان",
       factoryPrice: 842_000,
       warehousePrice: 850_000,
@@ -50,8 +50,8 @@ test("adds the delta to every current price in that category with exact arithmet
     },
     {
       date: "1405/05/30",
-      productCode: "RBR-A2-12",
-      brandId: "rebar-ribbed-11",
+      productCode: "RBR-000002",
+      brandId: "rebar-ribbed-ذوب-اهن-اصفهان",
       brandName: "ذوب آهن اصفهان",
       factoryPrice: 841_000,
       warehousePrice: null,
@@ -65,10 +65,10 @@ test("adds the delta to every current price in that category with exact arithmet
   const outcome = applyPricePolicy(policy!, "1405/05/30");
   assert.equal(outcome.changed, 2);
   const byCode = Object.fromEntries(outcome.rows.map((row) => [row.productCode, row]));
-  assert.equal(byCode["RBR-A2-10"]?.factoryPrice, 843_000);
-  assert.equal(byCode["RBR-A2-10"]?.warehousePrice, 851_000);
-  assert.equal(byCode["RBR-A2-12"]?.factoryPrice, 842_000);
-  assert.equal(byCode["RBR-A2-12"]?.warehousePrice, null);
+  assert.equal(byCode["RBR-000001"]?.factoryPrice, 843_000);
+  assert.equal(byCode["RBR-000001"]?.warehousePrice, 851_000);
+  assert.equal(byCode["RBR-000002"]?.factoryPrice, 842_000);
+  assert.equal(byCode["RBR-000002"]?.warehousePrice, null);
 });
 
 test("clears a finished listing to null and never writes zero", () => {
@@ -76,9 +76,9 @@ test("clears a finished listing to null and never writes zero", () => {
   upsertAppliedPrices([
     {
       date: "1405/05/30",
-      productCode: "sht-siah-x-10-1500-6000-برش-خورده",
-      brandId: "sheet-black-03",
-      brandName: "فولاد مبارکه",
+      productCode: "VSIH-000028",
+      brandId: "sheet-black-mobarakeh",
+      brandName: "فولاد مبارکه اصفهان",
       factoryPrice: 1_200_000,
       warehousePrice: 1_210_000,
       factorySource: "لیست صبح",
@@ -87,8 +87,8 @@ test("clears a finished listing to null and never writes zero", () => {
     },
     {
       date: "1405/05/30",
-      productCode: "sht-siah-x-10-1500-6000-برش-خورده",
-      brandId: "sheet-black-01",
+      productCode: "VSIH-000028",
+      brandId: "sheet-black-other",
       brandName: "اکسین اهواز",
       factoryPrice: 1_150_000,
       warehousePrice: null,

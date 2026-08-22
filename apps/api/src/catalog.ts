@@ -56,6 +56,10 @@ const MILL_ALIASES = new Map<string, string>(
     ["گروه ملی", "گروه ملی فولاد"],
     ["گروه ملی صنعتی", "گروه ملی فولاد"],
     ["ملی فولاد", "گروه ملی فولاد"],
+    ["نیشابور", "فولاد نیشابور"],
+    ["خراسان", "فولاد نیشابور"],
+    ["ذوب آهن", "ذوب آهن اصفهان"],
+    ["آذرفولاد امین", "آذر امین"],
   ].map(([from, to]) => [brandCore(from), to]),
 );
 
@@ -120,23 +124,63 @@ export function findProductByCode(
   return products.find((item) => item.sku === code) ?? null;
 }
 
+function productMatchesGrade(item: CatalogProduct, grade: string): boolean {
+  const name = item.name.toUpperCase();
+  const g = grade.toUpperCase();
+  if (g === "PLAIN" || g === "ساده") return /ساده/.test(item.name);
+  if (g === "A2") return /A\s*2/i.test(item.name) || name.includes("A2");
+  if (g === "A3") return (/A\s*3/i.test(item.name) || name.includes("A3") || /آجدار/.test(item.name)) && !/ساده/.test(item.name);
+  return name.includes(g);
+}
+
+function candidatesByGradeSize(
+  products: CatalogProduct[],
+  grade: string | null,
+  size: string | null,
+): CatalogProduct[] {
+  const g = normalizeGrade(grade);
+  const s = normalizeSize(size);
+  if (g && s) {
+    return products.filter((item) => productMatchesGrade(item, g) && normalizeSize(item.sizeLabel) === s);
+  }
+  if (!s) return [];
+  return products.filter((item) => normalizeSize(item.sizeLabel) === s);
+}
+
 export function findProductByGradeSize(
   products: CatalogProduct[],
   grade: string | null,
   size: string | null,
 ): CatalogProduct | null {
-  const g = normalizeGrade(grade);
-  const s = normalizeSize(size);
-  if (g && s) {
-    const withGrade = products.filter((item) => {
-      const name = item.name.toUpperCase();
-      return name.includes(g) && normalizeSize(item.sizeLabel) === s;
-    });
-    if (withGrade.length === 1) return withGrade[0];
-  }
-  if (!s) return null;
-  const bySize = products.filter((item) => normalizeSize(item.sizeLabel) === s);
-  return bySize.length === 1 ? bySize[0] : null;
+  const hits = candidatesByGradeSize(products, grade, size);
+  return hits.length === 1 ? hits[0] : null;
+}
+
+/**
+ * Website SoT: one catalog row per brand×spec (sequential SKU).
+ * Prefer exact brand match on brandNames / product name.
+ */
+export function findProductByGradeSizeBrand(
+  products: CatalogProduct[],
+  grade: string | null,
+  size: string | null,
+  brandName: string | null | undefined,
+): CatalogProduct | null {
+  if (!brandName?.trim()) return null;
+  const needle = brandCore(brandName);
+  if (needle.length < 2) return null;
+  const hits = candidatesByGradeSize(products, grade, size).filter((item) => {
+    if (item.brandNames.some((name) => brandCore(name) === needle)) return true;
+    if (item.brandNames.some((name) => {
+      const hay = brandCore(name);
+      return hay.length >= 3 && needle.length >= 3 && (hay.includes(needle) || needle.includes(hay));
+    })) {
+      return true;
+    }
+    const hay = brandCore(item.name);
+    return hay.includes(needle) || needle.split(" ").filter((t) => t.length >= 3).every((t) => hay.includes(t));
+  });
+  return hits.length === 1 ? hits[0] : null;
 }
 
 export function findBrand(
@@ -197,5 +241,13 @@ export function findBrandInText(brands: CategoryBrand[], text: string | null | u
 
 export function productAllowsBrand(product: CatalogProduct, brandName: string): boolean {
   if (!product.brandNames.length) return true;
-  return product.brandNames.includes(brandName);
+  const needle = brandCore(brandName);
+  if (!needle) return false;
+  return product.brandNames.some((name) => {
+    const hay = brandCore(name);
+    if (!hay) return false;
+    if (hay === needle) return true;
+    if (hay.length >= 3 && needle.length >= 3 && (hay.includes(needle) || needle.includes(hay))) return true;
+    return false;
+  });
 }

@@ -3,6 +3,7 @@ import {
   findBrandInText,
   findProductByCode,
   findProductByGradeSize,
+  findProductByGradeSizeBrand,
   productAllowsBrand,
   type CatalogProduct,
 } from "./catalog.ts";
@@ -16,7 +17,7 @@ export type ObservationMatch = {
   productName: string | null;
   brandId: string | null;
   brandName: string | null;
-  matchMethod: "product_code" | "grade_size" | "size_default_a3" | "unmatched";
+  matchMethod: "product_code" | "grade_size_brand" | "grade_size" | "size_default_a3" | "unmatched";
   factoryPrice: number | null;
   warehousePrice: number | null;
   unit: ExtractedItemDraft["unit"];
@@ -52,7 +53,16 @@ export function matchExtractedItem(
 
   const size = normalizeSize(item.size) ?? parseSizeFromText(item.raw_text);
   const grade = normalizeGrade(item.grade) ?? parseGradeFromText(item.raw_text);
+  const brandFromHint = findBrand(brands, item.suggested_brand_id, item.suggested_brand_name);
+  const brand =
+    brandFromHint ??
+    (item.suggested_brand_id || item.suggested_brand_name ? null : findBrandInText(brands, item.raw_text));
+  if ((item.suggested_brand_id || item.suggested_brand_name) && !brand) {
+    reasons.push("نام کارخانه به برند کاتالوگ وصل نشد و ساخته نشد");
+  }
+
   const byCode = findProductByCode(products, item.suggested_product_code);
+  const bySpecBrand = findProductByGradeSizeBrand(products, grade, size, brand?.name ?? item.suggested_brand_name);
   const bySpec = findProductByGradeSize(products, grade, size);
   let product: CatalogProduct | null = null;
   let matchMethod: ObservationMatch["matchMethod"] = "unmatched";
@@ -63,6 +73,9 @@ export function matchExtractedItem(
   if (byCode) {
     product = byCode;
     matchMethod = "product_code";
+  } else if (bySpecBrand) {
+    product = bySpecBrand;
+    matchMethod = "grade_size_brand";
   } else if (bySpec) {
     product = bySpec;
     matchMethod = "grade_size";
@@ -73,17 +86,10 @@ export function matchExtractedItem(
       matchMethod = "size_default_a3";
       reasons.push("استاندارد در منبع نبود. A3 پیشنهاد شد و باید تأیید شود. کالای جدید ساخته نشد.");
     } else {
-      reasons.push("این سایز در کاتالوگ چند کالا دارد؛ بدون استاندارد تطبیق قطعی نیست");
+      reasons.push("این سایز در کاتالوگ چند کالا دارد؛ بدون برند/استاندارد تطبیق قطعی نیست");
     }
   }
 
-  const brandFromHint = findBrand(brands, item.suggested_brand_id, item.suggested_brand_name);
-  const brand =
-    brandFromHint ??
-    (item.suggested_brand_id || item.suggested_brand_name ? null : findBrandInText(brands, item.raw_text));
-  if ((item.suggested_brand_id || item.suggested_brand_name) && !brand) {
-    reasons.push("نام کارخانه به برند کاتالوگ وصل نشد و ساخته نشد");
-  }
   if (product && brand && !productAllowsBrand(product, brand.name)) {
     reasons.push("این برند روی این کالا تگ مجاز ندارد");
   }

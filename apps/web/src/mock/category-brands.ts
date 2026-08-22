@@ -231,8 +231,13 @@ export const CATEGORY_BRANDS: Record<string, CategoryBrand[]> = {
   ],
 };
 
+import generatedBrands from "./category-brands.generated.json" with { type: "json" };
+
 export function getCategoryBrands(groupCode: string | undefined, categoryCode: string | undefined): CategoryBrand[] {
   if (!groupCode || !categoryCode) return [];
-  return CATEGORY_BRANDS[`${groupCode}/${categoryCode}`] ?? [];
+  const key = `${groupCode}/${categoryCode}`;
+  const generated = (generatedBrands as Record<string, CategoryBrand[]>)[key];
+  if (generated?.length) return generated;
+  return CATEGORY_BRANDS[key] ?? [];
 }
 

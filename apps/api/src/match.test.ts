@@ -24,28 +24,32 @@ function draft(partial: Partial<ExtractedItemDraft>): ExtractedItemDraft {
   };
 }
 
-test("accepts an existing product_code", () => {
+test("accepts an existing website sku as product_code", () => {
   const result = matchExtractedItem(
-    draft({ suggested_product_code: "RBR-A3-14", suggested_brand_name: "ذوب آهن اصفهان" }),
+    draft({ suggested_product_code: "RBR-000002", suggested_brand_name: "ذوب آهن اصفهان" }),
     products,
     brands,
   );
-  assert.equal(result.productCode, "RBR-A3-14");
-  assert.equal(result.brandId, "rebar-ribbed-11");
+  assert.equal(result.productCode, "RBR-000002");
+  assert.equal(result.brandName, "ذوب آهن اصفهان");
   assert.equal(result.matchMethod, "product_code");
   assert.equal(result.status, "pending_review");
 });
 
-test("rejects an invented product_code", () => {
-  const result = matchExtractedItem(draft({ suggested_product_code: "REB-A3-14-ESF" }), products, brands);
-  assert.equal(result.productCode, "RBR-A3-14");
-  assert.equal(result.matchMethod, "grade_size");
+test("rejects an invented product_code and falls back to website sku by grade+size+brand", () => {
+  const result = matchExtractedItem(
+    draft({ suggested_product_code: "REB-A3-14-ESF", suggested_brand_name: "ذوب آهن اصفهان" }),
+    products,
+    brands,
+  );
+  assert.equal(result.productCode, "RBR-000002");
+  assert.equal(result.matchMethod, "grade_size_brand");
   assert.ok(result.reasons.some((item) => item.includes("کاتالوگ")));
 });
 
 test("does not invent a brand", () => {
   const result = matchExtractedItem(
-    draft({ suggested_product_code: "RBR-A3-14", suggested_brand_name: "کارخانه خیالی" }),
+    draft({ suggested_product_code: "RBR-000002", suggested_brand_name: "کارخانه خیالی" }),
     products,
     brands,
   );
@@ -54,11 +58,11 @@ test("does not invent a brand", () => {
 });
 
 test("zero factory price becomes null", () => {
-  const result = matchExtractedItem(draft({ suggested_product_code: "RBR-A3-14", factory_price: 0 }), products, brands);
+  const result = matchExtractedItem(draft({ suggested_product_code: "RBR-000002", factory_price: 0 }), products, brands);
   assert.equal(result.factoryPrice, null);
 });
 
-test("maps mill name variants onto the catalog mill", () => {
+test("maps mill name variants onto the website sku", () => {
   const result = matchExtractedItem(
     draft({
       raw_text: "میلگرد ۱۲ میل ذوب آهن 78550",
@@ -71,12 +75,12 @@ test("maps mill name variants onto the catalog mill", () => {
     products,
     brands,
   );
-  assert.equal(result.productCode, "RBR-A3-12");
+  assert.equal(result.productCode, "RBR-000001");
   assert.equal(result.brandName, "ذوب آهن اصفهان");
-  assert.equal(result.matchMethod, "grade_size");
+  assert.equal(result.matchMethod, "grade_size_brand");
 });
 
-test("ribbed rebar mill نیشابور is فولاد خراسان, not خیام", () => {
+test("ribbed rebar mill نیشابور maps to website brand فولاد نیشابور", () => {
   const result = matchExtractedItem(
     draft({
       raw_text: "۱۴ A3 نیشابور کارخانه ۷۴۵۰۰",
@@ -88,8 +92,9 @@ test("ribbed rebar mill نیشابور is فولاد خراسان, not خیام"
     products,
     brands,
   );
-  assert.equal(result.brandId, "rebar-ribbed-09");
-  assert.equal(result.brandName, "نیشابور");
+  assert.equal(result.brandName, "فولاد نیشابور");
+  assert.ok(result.productCode?.startsWith("RBR-"));
+  assert.equal(result.matchMethod, "grade_size_brand");
 });
 
 test("آذرفولاد امین maps onto catalog mill آذر امین", () => {
@@ -104,11 +109,11 @@ test("آذرفولاد امین maps onto catalog mill آذر امین", () => {
     products,
     brands,
   );
-  assert.equal(result.brandId, "rebar-ribbed-02");
   assert.equal(result.brandName, "آذر امین");
+  assert.equal(result.matchMethod, "grade_size_brand");
 });
 
-test("size 12 without grade suggests A3 instead of creating a product", () => {
+test("size 12 with brand resolves website sku without inventing a product", () => {
   const result = matchExtractedItem(
     draft({
       raw_text: "میلگرد ۱۲ میل ذوب آهن",
@@ -121,9 +126,8 @@ test("size 12 without grade suggests A3 instead of creating a product", () => {
     products,
     brands,
   );
-  assert.equal(result.productCode, "RBR-A3-12");
-  assert.equal(result.matchMethod, "size_default_a3");
-  assert.equal(result.status, "suspicious");
+  assert.equal(result.productCode, "RBR-000001");
+  assert.equal(result.matchMethod, "grade_size_brand");
 });
 
 test("source rows outside the catalog are archived", () => {
@@ -169,13 +173,13 @@ test("carries mill name onto following size rows", () => {
     products,
     brands,
   );
-  assert.equal(matched[1]?.productCode, "RBR-A3-12");
+  assert.equal(matched[1]?.productCode, "RBR-000001");
   assert.equal(matched[1]?.brandName, "ذوب آهن اصفهان");
 });
 
 test("ambiguous mill names are not guessed", () => {
   const result = matchExtractedItem(
-    draft({ suggested_product_code: "RBR-A3-14", suggested_brand_name: "سیرجان" }),
+    draft({ suggested_product_code: "RBR-000002", suggested_brand_name: "سیرجان" }),
     products,
     brands,
   );
@@ -186,49 +190,46 @@ test("ambiguous mill names are not guessed", () => {
 test("حدید سیرجان and جهان فولاد سیرجان stay distinct", () => {
   const hadid = matchExtractedItem(draft({ suggested_brand_name: "حدید سیرجان" }), products, brands);
   const jahan = matchExtractedItem(draft({ suggested_brand_name: "جهان فولاد سیرجان" }), products, brands);
-  assert.equal(hadid.brandId, "rebar-ribbed-08");
-  assert.equal(jahan.brandId, "rebar-ribbed-07");
+  assert.equal(hadid.brandName, "حدید سیرجان");
+  assert.equal(jahan.brandName, "جهان فولاد سیرجان");
+  assert.notEqual(hadid.brandId, jahan.brandId);
 });
 
-test("فولاد بناب and ظفر بناب stay distinct", () => {
-  const bonab = matchExtractedItem(draft({ suggested_brand_name: "فولاد بناب" }), products, brands);
+test("ظفر بناب stays distinct from bare بناب", () => {
   const zafar = matchExtractedItem(draft({ suggested_brand_name: "ظفر بناب" }), products, brands);
   const bare = matchExtractedItem(draft({ suggested_brand_name: "بناب" }), products, brands);
-  assert.equal(bonab.brandId, "rebar-ribbed-21");
-  assert.equal(zafar.brandId, "rebar-ribbed-15");
+  assert.equal(zafar.brandName, "ظفر بناب");
   assert.equal(bare.brandId, null);
 });
 
 test("قائم اصفهان is the same mill as قائم رازی", () => {
   const result = matchExtractedItem(draft({ suggested_brand_name: "قائم اصفهان" }), products, brands);
-  assert.equal(result.brandId, "rebar-ribbed-28");
   assert.equal(result.brandName, "قائم رازی");
 });
 
 test("گروه ملی maps onto catalog mill گروه ملی فولاد", () => {
   const result = matchExtractedItem(draft({ suggested_brand_name: "گروه ملی" }), products, brands);
-  assert.equal(result.brandId, "rebar-ribbed-35");
   assert.equal(result.brandName, "گروه ملی فولاد");
 });
 
 test("کاوه اروند is not کاوه تیکمه داش", () => {
-  const arvand = matchExtractedItem(draft({ suggested_brand_name: "اروند" }), products, brands);
+  const arvand = matchExtractedItem(draft({ suggested_brand_name: "کاوه اروند" }), products, brands);
   const tikmeh = matchExtractedItem(draft({ suggested_brand_name: "کاوه تیکمه داش" }), products, brands);
   const bareKaveh = matchExtractedItem(draft({ suggested_brand_name: "کاوه" }), products, brands);
-  assert.equal(arvand.brandId, "rebar-ribbed-32");
-  assert.equal(tikmeh.brandId, "rebar-ribbed-33");
+  assert.equal(arvand.brandName, "کاوه اروند");
+  assert.equal(tikmeh.brandName, "کاوه تیکمه داش");
   assert.equal(bareKaveh.brandId, null);
 });
 
-test("matches beam by unique size without inventing a sku", () => {
+test("matches beam by size+brand onto website sku", () => {
   const beams = getScopeProducts("beam", "ipe");
   const beamBrands = getScopeBrands("beam", "ipe");
   const result = matchExtractedItem(
     {
-      raw_text: "تیرآهن 14 اصفهان",
+      raw_text: "تیرآهن 14 آریان فولاد",
       suggested_product_code: null,
       suggested_brand_id: null,
-      suggested_brand_name: "اصفهان",
+      suggested_brand_name: "آریان فولاد",
       grade: null,
       size: "14",
       factory_price: 42000,
@@ -240,7 +241,7 @@ test("matches beam by unique size without inventing a sku", () => {
     beams,
     beamBrands,
   );
-  assert.equal(result.productCode, "BEAM-14");
-  assert.equal(result.matchMethod, "grade_size");
-  assert.equal(result.brandName, "اصفهان");
+  assert.equal(result.productCode, "IPE-000039");
+  assert.equal(result.matchMethod, "grade_size_brand");
+  assert.equal(result.brandName, "آریان فولاد");
 });

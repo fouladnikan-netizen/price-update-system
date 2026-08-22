@@ -4,8 +4,8 @@ import { buildIdempotencyKey, PublishError, publishToWebsite, validatePublishReq
 
 const approved = {
   queueItemId: "raw-1:0",
-  productCode: "RBR-A3-14",
-  brandId: "rebar-ribbed-11",
+  productCode: "RBR-000002",
+  brandId: "rebar-ribbed-ذوب-اهن-اصفهان",
   brandName: "ذوب آهن اصفهان",
   factoryPrice: 420_000,
   warehousePrice: null,
@@ -17,8 +17,8 @@ const approved = {
 
 test("approved matched prices become a website payload without zeros", () => {
   const payload = validatePublishRequest(approved);
-  assert.equal(payload.sku, "RBR-A3-14");
-  assert.equal(payload.product_code, "RBR-A3-14");
+  assert.equal(payload.sku, "RBR-000002");
+  assert.equal(payload.product_code, "RBR-000002");
   assert.equal(payload.factory_price_toman, 42_000);
   assert.equal(payload.warehouse_price_toman, null);
   assert.equal(payload.auto_generated, false);
@@ -42,15 +42,15 @@ test("idempotency key is stable for the same approved price", () => {
 test("missing website credentials queue locally and do not invent a product", async () => {
   const previous = process.env.WEBSITE_API_BASE_URL;
   const previousKey = process.env.WEBSITE_API_KEY;
-  delete process.env.WEBSITE_API_BASE_URL;
-  delete process.env.WEBSITE_API_KEY;
+  process.env.WEBSITE_API_BASE_URL = "";
+  process.env.WEBSITE_API_KEY = "";
   try {
     const result = await publishToWebsite(approved, async () => {
       throw new Error("should not send");
     });
     assert.equal(result.status, "queued");
     assert.equal(result.dryRun, true);
-    assert.equal(result.productCode, "RBR-A3-14");
+    assert.equal(result.productCode, "RBR-000002");
   } finally {
     if (previous === undefined) delete process.env.WEBSITE_API_BASE_URL;
     else process.env.WEBSITE_API_BASE_URL = previous;
