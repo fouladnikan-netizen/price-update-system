@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/AuthState";
 import { ManualIntakeModal } from "../intake/ManualIntakeModal";
 import { usePriceUpdate } from "../intake/PriceUpdateState";
 import { MOCK_NOTICE, PRODUCT_GROUPS } from "../mock/data";
@@ -15,6 +16,7 @@ function categoryScopeFromPath(pathname: string): { groupCode?: string; category
 export function Layout() {
   const { pathname } = useLocation();
   const { busy, note, error, report, runUpdate } = usePriceUpdate();
+  const { username, logout } = useAuth();
   const apiOk = useApiHealth();
   const [manualOpen, setManualOpen] = useState(false);
   const activeGroup = categoryScopeFromPath(pathname)?.groupCode ?? null;
@@ -87,6 +89,10 @@ export function Layout() {
         </nav>
 
         <div className="rail-foot">
+          {username ? <span className="rail-status">ورود: {username}</span> : null}
+          <button className="btn" type="button" onClick={() => void logout()}>
+            خروج
+          </button>
           <span className="rail-status">انتشار خودکار خاموش</span>
           <span className={apiOk === false ? "rail-status is-down" : "rail-status"}>
             {apiOk === false ? "پشت‌صحنه خاموش است" : apiOk ? "پشت‌صحنه روشن است" : "در حال بررسی پشت‌صحنه…"}

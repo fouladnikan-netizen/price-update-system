@@ -3,6 +3,10 @@ import { resolve } from "node:path";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../../..");
 
+export function ensureEnv(): void {
+  loadEnvFile();
+}
+
 function loadEnvFile(): void {
   const file = resolve(REPO_ROOT, ".env");
   if (!existsSync(file)) return;

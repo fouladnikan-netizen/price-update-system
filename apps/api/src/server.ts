@@ -4,6 +4,18 @@ import { pingBaleBot } from "./bale.ts";
 import { startBaleInboxPoller } from "./botInbox.ts";
 import { persistDailyPrices, readDailyPrices, importFilePricesIfDatabaseEmpty } from "./dailyPersist.ts";
 import { pingDatabase } from "./db.ts";
+import {
+  allowLoginAttempt,
+  clearSessionCookieHeader,
+  clientKey,
+  getAuthConfig,
+  isPublicApi,
+  resetLoginAttempts,
+  sessionCookieHeader,
+  sessionFromRequest,
+  signSession,
+  verifyCredentials,
+} from "./auth.ts";
 import { getAiConfig, getBaleConfig, getBaleUserConfig, getServerConfig, getTelegramConfig, getWebsiteConfig } from "./env.ts";
 import { extractPrices, extractPricesFromImage, matchDrafts } from "./extract.ts";
 import { applyMigrations } from "./migrate.ts";
@@ -23,13 +35,35 @@ import { suggestSourceIdentity } from "./sourceIdentity.ts";
 import { staticDirExists, tryServeStatic } from "./static.ts";
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,POST,PUT,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
 };
 
-function json(res: ServerResponse, status: number, body: unknown): void {
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", ...CORS });
+function requestOrigin(req: IncomingMessage): string | null {
+  const origin = String(req.headers.origin ?? "").trim();
+  if (!origin) return null;
+  try {
+    const url = new URL(origin);
+    if (url.hostname === "127.0.0.1" || url.hostname === "localhost") return origin;
+    if (url.hostname === "pricing.fouladnikan.com") return origin;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function corsHeaders(req: IncomingMessage): Record<string, string> {
+  const origin = requestOrigin(req);
+  return origin ? { ...CORS, "Access-Control-Allow-Origin": origin, Vary: "Origin" } : { ...CORS };
+}
+
+function json(res: ServerResponse, req: IncomingMessage, status: number, body: unknown, extra: Record<string, string> = {}): void {
+  res.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+    ...corsHeaders(req),
+    ...extra,
+  });
   res.end(JSON.stringify(body));
 }
 
@@ -57,19 +91,66 @@ function stripBase64(value: string): string {
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", "http://127.0.0.1");
   if (req.method === "OPTIONS") {
-    res.writeHead(204, CORS);
+    res.writeHead(204, corsHeaders(req));
     res.end();
     return;
   }
 
   try {
+    if (req.method === "GET" && url.pathname === "/api/auth/me") {
+      const username = sessionFromRequest(req);
+      json(res, req, 200, { ok: true, authenticated: Boolean(username), username: username ?? null });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/login") {
+      const auth = getAuthConfig();
+      if (!auth.configured) {
+        json(res, req, 503, { error: "ورود روی سرور تنظیم نشده است." });
+        return;
+      }
+      const ip = clientKey(req);
+      if (!allowLoginAttempt(ip)) {
+        json(res, req, 429, { error: "تعداد تلاش ورود بیش از حد است. کمی بعد دوباره امتحان کنید." });
+        return;
+      }
+      const payload = JSON.parse((await readBody(req, 8 * 1024)).toString("utf8") || "{}") as {
+        username?: string;
+        password?: string;
+      };
+      if (!verifyCredentials(payload.username ?? "", payload.password ?? "", auth)) {
+        json(res, req, 401, { error: "نام کاربری یا رمز عبور نادرست است." });
+        return;
+      }
+      resetLoginAttempts(ip);
+      const token = signSession(auth.username, auth);
+      json(res, req, 200, { ok: true, username: auth.username }, { "Set-Cookie": sessionCookieHeader(token, req) });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/logout") {
+      json(res, req, 200, { ok: true }, { "Set-Cookie": clearSessionCookieHeader(req) });
+      return;
+    }
+
+    if (url.pathname.startsWith("/api/") && !isPublicApi(req.method ?? "GET", url.pathname)) {
+      if (!getAuthConfig().configured) {
+        json(res, req, 503, { error: "ورود روی سرور تنظیم نشده است." });
+        return;
+      }
+      if (!sessionFromRequest(req)) {
+        json(res, req, 401, { error: "ورود لازم است." });
+        return;
+      }
+    }
+
     if (req.method === "GET" && url.pathname === "/api/health") {
       const config = getAiConfig();
       const db = await pingDatabase();
       const website = getWebsiteConfig();
       const bale = getBaleConfig();
       const balePing = bale.configured ? await pingBaleBot() : { ok: false };
-      json(res, 200, {
+      json(res, req, 200, {
         ok: true,
         configured: config.configured,
         model: config.model,
@@ -88,12 +169,12 @@ const server = createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && url.pathname === "/api/applied-prices") {
-      json(res, 200, { prices: await readDailyPrices(), autoPublish: false });
+      json(res, req, 200, { prices: await readDailyPrices(), autoPublish: false });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/daily-prices") {
-      json(res, 200, { prices: await readDailyPrices(), autoPublish: false });
+      json(res, req, 200, { prices: await readDailyPrices(), autoPublish: false });
       return;
     }
 
@@ -103,13 +184,13 @@ const server = createServer(async (req, res) => {
       };
       if (!Array.isArray(payload.prices)) throw new Error("فهرست قیمت روز نامعتبر است.");
       const prices = await persistDailyPrices(payload.prices as Parameters<typeof persistDailyPrices>[0]);
-      json(res, 200, { prices, autoPublish: false });
+      json(res, req, 200, { prices, autoPublish: false });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/sources") {
       const fromDb = await loadSourcesFromDb();
-      json(res, 200, fromDb ?? { store: "unavailable", sources: [] });
+      json(res, req, 200, fromDb ?? { store: "unavailable", sources: [] });
       return;
     }
 
@@ -120,16 +201,16 @@ const server = createServer(async (req, res) => {
       if (!Array.isArray(payload.sources)) throw new Error("فهرست منابع نامعتبر است.");
       const ok = await saveSourcesToDb(payload.sources as Parameters<typeof saveSourcesToDb>[0]);
       if (!ok) {
-        json(res, 503, { error: "دیتابیس در دسترس نیست.", store: "unavailable" });
+        json(res, req, 503, { error: "دیتابیس در دسترس نیست.", store: "unavailable" });
         return;
       }
-      json(res, 200, { ok: true, store: "postgres", autoPublish: false });
+      json(res, req, 200, { ok: true, store: "postgres", autoPublish: false });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/intakes") {
       const fromDb = await loadIntakesFromDb();
-      json(res, 200, fromDb ?? { store: "unavailable", intakes: [] });
+      json(res, req, 200, fromDb ?? { store: "unavailable", intakes: [] });
       return;
     }
 
@@ -140,15 +221,15 @@ const server = createServer(async (req, res) => {
       if (!Array.isArray(payload.intakes)) throw new Error("فهرست ورودی خام نامعتبر است.");
       const ok = await saveIntakesToDb(payload.intakes as Parameters<typeof saveIntakesToDb>[0]);
       if (!ok) {
-        json(res, 503, { error: "دیتابیس در دسترس نیست.", store: "unavailable" });
+        json(res, req, 503, { error: "دیتابیس در دسترس نیست.", store: "unavailable" });
         return;
       }
-      json(res, 200, { ok: true, store: "postgres", canPublish: false });
+      json(res, req, 200, { ok: true, store: "postgres", canPublish: false });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/prompts") {
-      json(res, 200, {
+      json(res, req, 200, {
         active: PROMPT_VERSION,
         prompts: [
           {
@@ -179,7 +260,7 @@ const server = createServer(async (req, res) => {
           "Content-Type": image.meta.mimeType,
           "Content-Length": image.bytes.length,
           "Cache-Control": "private, max-age=86400",
-          ...CORS,
+          ...corsHeaders(req),
         });
         res.end(image.bytes);
         return;
@@ -190,17 +271,17 @@ const server = createServer(async (req, res) => {
           "Content-Type": "text/plain; charset=utf-8",
           "Content-Length": text.bytes.length,
           "Cache-Control": "private, max-age=86400",
-          ...CORS,
+          ...corsHeaders(req),
         });
         res.end(text.bytes);
         return;
       }
-      json(res, 404, { error: "not_found" });
+      json(res, req, 404, { error: "not_found" });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/raw-recent") {
-      json(res, 200, {
+      json(res, req, 200, {
         items: listRawTexts(10).map((item) => ({
           id: item.id,
           sourceUrl: item.sourceUrl,
@@ -226,7 +307,7 @@ const server = createServer(async (req, res) => {
         categoryCode: payload.categoryCode ?? "",
       });
       console.log(`extract done observations=${result.observations.length}`);
-      json(res, 200, result);
+      json(res, req, 200, result);
       return;
     }
 
@@ -241,7 +322,7 @@ const server = createServer(async (req, res) => {
         categoryCode: payload.categoryCode ?? "",
         items: payload.items,
       });
-      json(res, 200, result);
+      json(res, req, 200, result);
       return;
     }
 
@@ -258,7 +339,7 @@ const server = createServer(async (req, res) => {
         categoryLabel: payload.categoryLabel ?? "",
         sourceType: payload.sourceType ?? "",
       });
-      json(res, 200, result);
+      json(res, req, 200, result);
       return;
     }
 
@@ -293,10 +374,10 @@ const server = createServer(async (req, res) => {
           mimeType: meta.mimeType,
           imageBase64,
         });
-        json(res, 200, { ...result, rawFile });
+        json(res, req, 200, { ...result, rawFile });
       } catch (error) {
         const message = error instanceof Error ? error.message : "استخراج تصویر انجام نشد.";
-        json(res, error instanceof AiGatewayError ? 502 : 400, {
+        json(res, req, error instanceof AiGatewayError ? 502 : 400, {
           error: message,
           canPublish: false,
           rawFile,
@@ -323,7 +404,7 @@ const server = createServer(async (req, res) => {
         text: collected.text,
       });
       console.log(`collect ${sourceType} ${collected.fetchedUrl} ${collected.text.length} chars`);
-      json(res, 200, {
+      json(res, req, 200, {
         rawText: collected.text,
         fetchedUrl: collected.fetchedUrl,
         needsExtract: true,
@@ -341,12 +422,12 @@ const server = createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/api/publish") {
       const payload = JSON.parse((await readBody(req, 64 * 1024)).toString("utf8") || "{}") as PublishRequest;
       const result = await publishToWebsite(payload);
-      json(res, 200, { ...result, canPublish: false, autoPublish: false });
+      json(res, req, 200, { ...result, canPublish: false, autoPublish: false });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/schedule") {
-      json(res, 200, { schedule: await loadPersistedSchedule(), store: "postgres", autoPublish: false });
+      json(res, req, 200, { schedule: await loadPersistedSchedule(), store: "postgres", autoPublish: false });
       return;
     }
 
@@ -356,23 +437,23 @@ const server = createServer(async (req, res) => {
       };
       const ok = await savePersistedSchedule(payload.schedule as Parameters<typeof savePersistedSchedule>[0]);
       if (!ok) {
-        json(res, 503, { error: "دیتابیس در دسترس نیست.", store: "unavailable" });
+        json(res, req, 503, { error: "دیتابیس در دسترس نیست.", store: "unavailable" });
         return;
       }
-      json(res, 200, { schedule: await loadPersistedSchedule(), store: "postgres", autoPublish: false });
+      json(res, req, 200, { schedule: await loadPersistedSchedule(), store: "postgres", autoPublish: false });
       return;
     }
 
     if (req.method === "POST" && url.pathname === "/api/scheduled-update") {
       const result = await runScheduledSourceUpdate();
-      json(res, 200, result);
+      json(res, req, 200, result);
       return;
     }
 
     const files = getServerConfig();
-    if (staticDirExists(files.staticDir) && tryServeStatic(files.staticDir, req, res, CORS)) return;
+    if (staticDirExists(files.staticDir) && tryServeStatic(files.staticDir, req, res, corsHeaders(req))) return;
 
-    json(res, 404, { error: "not_found" });
+    json(res, req, 404, { error: "not_found" });
   } catch (error) {
     const message = error instanceof Error ? error.message : "خطای ناشناخته";
     const status =
@@ -381,7 +462,7 @@ const server = createServer(async (req, res) => {
         : error instanceof AiGatewayError && error.status === 401
           ? 502
           : 400;
-    json(res, status, { error: message, canPublish: false });
+    json(res, req, status, { error: message, canPublish: false });
   }
 });
 
@@ -392,6 +473,7 @@ server.listen(listen.port, listen.host, () => {
   console.log(`price-update api on http://${listen.host}:${listen.port}`);
   console.log(`AI configured: ${config.configured ? "yes" : "no"} model=${config.model}`);
   console.log(`Website publish: ${website.configured ? "configured" : "queued locally"}`);
+  console.log(`Operator login: ${getAuthConfig().configured ? "required" : "NOT CONFIGURED"}`);
   if (staticDirExists(listen.staticDir)) {
     console.log(`static ui: ${listen.staticDir}`);
   }

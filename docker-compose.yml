@@ -26,7 +26,7 @@ services:
       AI_API_PORT: "8787"
       PRICE_UPDATE_STATIC_DIR: /app/apps/web/dist
     ports:
-      - "8787:8787"
+      - "127.0.0.1:8787:8787"
     volumes:
       - price_update_raw:/app/data/raw-inputs
       - price_update_applied:/app/data/applied-prices
