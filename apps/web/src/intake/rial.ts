@@ -18,3 +18,9 @@ export function toRegisteredRial(amount: number | null | undefined, unit?: strin
   const rial = looksLikeRial(amount, unit) ? amount : amount * TOMAN_TO_RIAL * VAT;
   return roundRialToThousands(rial);
 }
+
+export function registeredRialToToman(rial: number | null | undefined): number | null {
+  if (rial == null || !Number.isFinite(rial) || rial <= 0) return null;
+  const toman = Math.round(rial / TOMAN_TO_RIAL);
+  return toman > 0 ? toman : null;
+}

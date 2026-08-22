@@ -1,3 +1,4 @@
+import { registeredRialToToman } from "../../web/src/intake/rial.ts";
 import { getWebsiteConfig } from "./env.ts";
 
 export class PublishError extends Error {
@@ -93,8 +94,10 @@ export function validatePublishRequest(input: PublishRequest): WebsitePublishPay
   if (!productCode) {
     throw new PublishError("بدون product_code / sku وب‌سایت چیزی منتشر نمی‌شود.");
   }
-  const factoryPrice = assertPositiveOrNull(input.factoryPrice, "قیمت کارخانه");
-  const warehousePrice = assertPositiveOrNull(input.warehousePrice, "قیمت انبار");
+  const factoryRial = assertPositiveOrNull(input.factoryPrice, "قیمت کارخانه");
+  const warehouseRial = assertPositiveOrNull(input.warehousePrice, "قیمت انبار");
+  const factoryPrice = registeredRialToToman(factoryRial);
+  const warehousePrice = registeredRialToToman(warehouseRial);
   if (factoryPrice === null && warehousePrice === null) {
     throw new PublishError("حداقل یکی از قیمت کارخانه یا انبار باید مقدار داشته باشد.");
   }

@@ -14,6 +14,7 @@ import { collectPublicText, isCollectableType } from "./collect.ts";
 import { persistDailyPriceUpserts, readDailyPrices } from "./dailyPersist.ts";
 import { extractPrices } from "./extract.ts";
 import { appendIntakesToDb, loadSourcesFromDb } from "./opsStore.ts";
+import { publishDailyRows } from "./publishDaily.ts";
 import { saveRawText } from "./rawFiles.ts";
 
 export type ScheduledUpdateResult = {
@@ -21,6 +22,8 @@ export type ScheduledUpdateResult = {
   collected: number;
   filled: number;
   changed: number;
+  published: number;
+  queued: number;
   mode: ScheduleSlotMode;
   autoPublish: false;
 };
@@ -76,21 +79,34 @@ export async function runScheduledSourceUpdate(mode: ScheduleSlotMode = "first")
 
   const incoming = incomingDailyPrices(collected, sources);
   const existing = await readDailyPrices();
-  const empty = { saved: 0, collected: collected.length, filled: 0, changed: 0, mode, autoPublish: false as const };
+  const empty = {
+    saved: 0,
+    collected: collected.length,
+    filled: 0,
+    changed: 0,
+    published: 0,
+    queued: 0,
+    mode,
+    autoPublish: false as const,
+  };
 
   if (mode === "missing") {
     const filled = mergeMissingDailyPrices(existing, incoming);
     if (!filled.length) return empty;
     await persistDailyPriceUpserts(filled);
-    return { ...empty, saved: filled.length, filled: filled.length };
+    const published = await publishDailyRows(filled);
+    return { ...empty, saved: filled.length, filled: filled.length, published: published.accepted, queued: published.queued };
   }
 
   const changed = countDailyPriceChanges(existing, incoming);
   if (incoming.length) await persistDailyPriceUpserts(incoming);
+  const published = incoming.length ? await publishDailyRows(incoming) : { accepted: 0, queued: 0 };
   return {
     ...empty,
     saved: incoming.length,
     filled: incoming.filter((row) => !existing.some((item) => item.date === row.date && item.productCode === row.productCode && (item.brandId ?? null) === (row.brandId ?? null))).length,
     changed,
+    published: published.accepted,
+    queued: published.queued,
   };
 }
