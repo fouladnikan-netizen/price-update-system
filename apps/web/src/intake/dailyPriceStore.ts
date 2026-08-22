@@ -65,6 +65,47 @@ export function datesInStore(items: DailyPrice[]): string[] {
   return [...new Set(items.map((item) => item.date))].sort();
 }
 
+export function hasAnyPrice(row: Pick<DailyPrice, "factoryPrice" | "warehousePrice"> | undefined): boolean {
+  return Boolean(row && (row.factoryPrice != null || row.warehousePrice != null));
+}
+
+export function mergeMissingDailyPrices(existing: DailyPrice[], incoming: DailyPrice[]): DailyPrice[] {
+  const byKey = new Map(existing.map((row) => [dailyPriceKey(row.date, row.productCode, row.brandId), row]));
+  const filled: DailyPrice[] = [];
+  for (const row of incoming) {
+    const prev = byKey.get(dailyPriceKey(row.date, row.productCode, row.brandId));
+    if (!prev) {
+      if (hasAnyPrice(row)) filled.push(row);
+      continue;
+    }
+    const factoryPrice = prev.factoryPrice ?? row.factoryPrice;
+    const warehousePrice = prev.warehousePrice ?? row.warehousePrice;
+    if (factoryPrice === prev.factoryPrice && warehousePrice === prev.warehousePrice) continue;
+    filled.push({
+      ...row,
+      factoryPrice,
+      warehousePrice,
+      factorySource: factoryPrice === prev.factoryPrice ? prev.factorySource : row.factorySource,
+      warehouseSource: warehousePrice === prev.warehousePrice ? prev.warehouseSource : row.warehouseSource,
+    });
+  }
+  return filled;
+}
+
+export function countDailyPriceChanges(existing: DailyPrice[], incoming: DailyPrice[]): number {
+  const byKey = new Map(existing.map((row) => [dailyPriceKey(row.date, row.productCode, row.brandId), row]));
+  let changed = 0;
+  for (const row of incoming) {
+    const prev = byKey.get(dailyPriceKey(row.date, row.productCode, row.brandId));
+    if (!prev) {
+      if (hasAnyPrice(row)) changed += 1;
+      continue;
+    }
+    if (prev.factoryPrice !== row.factoryPrice || prev.warehousePrice !== row.warehousePrice) changed += 1;
+  }
+  return changed;
+}
+
 export function replaceDailyPricesForDate(items: DailyPrice[], date: string, rows: DailyPrice[]): DailyPrice[] {
   return [
     ...rows.map((row) => ({

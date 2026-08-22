@@ -11,26 +11,76 @@ export const WEEKDAYS = [
   { id: 5, label: "جمعه" },
 ] as const;
 
+export type ScheduleSlotMode = "first" | "missing" | "audit";
+
+export type ScheduleSlot = {
+  time: string;
+  mode: ScheduleSlotMode;
+};
+
 export type UpdateSchedule = {
   enabled: boolean;
   time: string;
   days: number[];
+  slots: ScheduleSlot[];
 };
 
+export type LastScheduleRun = {
+  dateKey: string;
+  times: string[];
+};
+
+export const DEFAULT_SLOTS: ScheduleSlot[] = [
+  { time: "11:00", mode: "first" },
+  { time: "11:30", mode: "missing" },
+  { time: "12:00", mode: "missing" },
+  { time: "14:00", mode: "missing" },
+  { time: "14:30", mode: "audit" },
+];
+
+export const SLOT_LABELS: Record<ScheduleSlotMode, string> = {
+  first: "جمع‌آوری اول همه منابع",
+  missing: "فقط جداول بدون قیمت",
+  audit: "کنترل تغییر قیمت همه محصولات",
+};
+
+const TIME_RE = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+
+function isSlotMode(value: unknown): value is ScheduleSlotMode {
+  return value === "first" || value === "missing" || value === "audit";
+}
+
+export function parseSlots(raw: unknown): ScheduleSlot[] {
+  if (!Array.isArray(raw)) return DEFAULT_SLOTS;
+  const slots = raw
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const row = item as Partial<ScheduleSlot>;
+      if (typeof row.time !== "string" || !TIME_RE.test(row.time) || !isSlotMode(row.mode)) return null;
+      return { time: row.time, mode: row.mode };
+    })
+    .filter((item): item is ScheduleSlot => item != null);
+  return slots.length ? slots : DEFAULT_SLOTS;
+}
+
 export function defaultSchedule(): UpdateSchedule {
-  return { enabled: false, time: "09:00", days: [6, 0, 1, 2, 3] };
+  return { enabled: false, time: DEFAULT_SLOTS[0].time, days: [6, 0, 1, 2, 3], slots: DEFAULT_SLOTS };
 }
 
 export function parseSchedule(raw: unknown): UpdateSchedule {
   const fallback = defaultSchedule();
   if (!raw || typeof raw !== "object") return fallback;
   const parsed = raw as Partial<UpdateSchedule>;
-  const time =
-    typeof parsed.time === "string" && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(parsed.time) ? parsed.time : fallback.time;
+  const slots = parseSlots(parsed.slots);
   const days = Array.isArray(parsed.days)
     ? parsed.days.filter((day): day is number => Number.isInteger(day) && day >= 0 && day <= 6)
     : fallback.days;
-  return { enabled: Boolean(parsed.enabled), time, days };
+  return {
+    enabled: Boolean(parsed.enabled),
+    time: slots[0]?.time ?? fallback.time,
+    days,
+    slots,
+  };
 }
 
 export function loadSchedule(): UpdateSchedule {
@@ -46,17 +96,33 @@ export function loadSchedule(): UpdateSchedule {
 
 export function saveSchedule(schedule: UpdateSchedule): void {
   if (typeof localStorage === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(parseSchedule(schedule)));
 }
 
-export function loadLastScheduleRun(): string | null {
+export function parseLastRun(raw: unknown): LastScheduleRun | null {
+  if (!raw || typeof raw !== "object") return null;
+  const dateKey = typeof (raw as { dateKey?: unknown }).dateKey === "string" ? (raw as { dateKey: string }).dateKey : "";
+  if (!dateKey) return null;
+  const times = Array.isArray((raw as { times?: unknown }).times)
+    ? (raw as { times: unknown[] }).times.filter((item): item is string => typeof item === "string" && TIME_RE.test(item))
+    : [];
+  return { dateKey, times };
+}
+
+export function loadLastScheduleRun(): LastScheduleRun | null {
   if (typeof localStorage === "undefined") return null;
-  return localStorage.getItem(LAST_RUN_KEY);
+  try {
+    const raw = localStorage.getItem(LAST_RUN_KEY);
+    if (!raw) return null;
+    return parseLastRun(JSON.parse(raw));
+  } catch {
+    return null;
+  }
 }
 
-export function saveLastScheduleRun(dateKey: string): void {
+export function saveLastScheduleRun(run: LastScheduleRun): void {
   if (typeof localStorage === "undefined") return;
-  localStorage.setItem(LAST_RUN_KEY, dateKey);
+  localStorage.setItem(LAST_RUN_KEY, JSON.stringify(run));
 }
 
 export function tehranClock(): { weekday: number; time: string; dateKey: string } {
@@ -73,9 +139,30 @@ export function tehranClock(): { weekday: number; time: string; dateKey: string 
   return { weekday: map[weekdayName] ?? now.getDay(), time, dateKey };
 }
 
-export function shouldRunSchedule(schedule: UpdateSchedule, clock = tehranClock(), lastRun: string | null = loadLastScheduleRun()): boolean {
-  if (!schedule.enabled) return false;
-  if (!schedule.days.includes(clock.weekday)) return false;
-  if (clock.time !== schedule.time) return false;
-  return lastRun !== clock.dateKey;
+export function dueScheduleSlot(
+  schedule: UpdateSchedule,
+  clock = tehranClock(),
+  lastRun: LastScheduleRun | null = loadLastScheduleRun(),
+): ScheduleSlot | null {
+  if (!schedule.enabled) return null;
+  if (!schedule.days.includes(clock.weekday)) return null;
+  const slot = schedule.slots.find((item) => item.time === clock.time);
+  if (!slot) return null;
+  if (lastRun?.dateKey === clock.dateKey && lastRun.times.includes(slot.time)) return null;
+  return slot;
+}
+
+export function shouldRunSchedule(
+  schedule: UpdateSchedule,
+  clock = tehranClock(),
+  lastRun: LastScheduleRun | string | null = loadLastScheduleRun(),
+): boolean {
+  const run = typeof lastRun === "string" ? { dateKey: lastRun, times: [] } : lastRun;
+  return dueScheduleSlot(schedule, clock, run) != null;
+}
+
+export function markSlotRan(lastRun: LastScheduleRun | null, dateKey: string, time: string): LastScheduleRun {
+  if (lastRun?.dateKey !== dateKey) return { dateKey, times: [time] };
+  if (lastRun.times.includes(time)) return lastRun;
+  return { dateKey, times: [...lastRun.times, time] };
 }

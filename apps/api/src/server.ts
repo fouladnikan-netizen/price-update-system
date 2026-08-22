@@ -445,7 +445,11 @@ const server = createServer(async (req, res) => {
     }
 
     if (req.method === "POST" && url.pathname === "/api/scheduled-update") {
-      const result = await runScheduledSourceUpdate();
+      const payload = JSON.parse((await readBody(req, 8 * 1024)).toString("utf8") || "{}") as {
+        mode?: string;
+      };
+      const mode = payload.mode === "missing" || payload.mode === "audit" ? payload.mode : "first";
+      const result = await runScheduledSourceUpdate(mode);
       json(res, req, 200, result);
       return;
     }
@@ -489,7 +493,7 @@ server.listen(listen.port, listen.host, () => {
     })
     .catch(() => undefined);
   startSchedulePoller();
-  console.log("schedule poller: Tehran clock on the server; website auto-publish stays off");
+  console.log("schedule poller: 11:00 first, 11:30/12:00/14:00 missing, 14:30 audit; website auto-publish stays off");
   if (getBaleConfig().configured) {
     startBaleInboxPoller();
     console.log("Bale inbox: messages to the org bot are applied automatically; website publish stays off");

@@ -1,7 +1,10 @@
 import { useEffect, useState, type FormEvent } from "react";
 import {
+  DEFAULT_SLOTS,
+  SLOT_LABELS,
   WEEKDAYS,
   loadSchedule,
+  parseSchedule,
   saveSchedule,
   type UpdateSchedule,
 } from "../../settings/scheduleStore";
@@ -64,11 +67,12 @@ export function KeysPage() {
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    saveSchedule(schedule);
+    const next = parseSchedule(schedule);
+    saveSchedule(next);
     void fetch("/api/schedule", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ schedule }),
+      body: JSON.stringify({ schedule: next }),
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("زمان‌بندی روی سرور ذخیره نشد.");
@@ -195,16 +199,16 @@ export function KeysPage() {
             checked={schedule.enabled}
             onChange={(event) => setSchedule((current) => ({ ...current, enabled: event.target.checked }))}
           />
-            به‌روزرسانی خودکار در ساعت مشخص (روی سرور)
+            زمان‌بند روزانه روی سرور فعال باشد
         </label>
-        <label>
-          ساعت
-          <input
-            type="time"
-            value={schedule.time}
-            onChange={(event) => setSchedule((current) => ({ ...current, time: event.target.value }))}
-          />
-        </label>
+        <ul className="schedule-slots">
+          {(schedule.slots.length ? schedule.slots : DEFAULT_SLOTS).map((slot) => (
+            <li key={`${slot.time}-${slot.mode}`}>
+              <strong>{slot.time}</strong>
+              <span>{SLOT_LABELS[slot.mode]}</span>
+            </li>
+          ))}
+        </ul>
         <fieldset className="day-picks">
           <legend>روزها</legend>
           {WEEKDAYS.map((day) => (

@@ -1742,3 +1742,23 @@ body.is-col-resizing * {
   margin-top: 10px;
   width: 100%;
 }
+
+.schedule-slots {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.schedule-slots li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 14px;
+}
+
+.schedule-slots strong {
+  font-variant-numeric: tabular-nums;
+  min-width: 4.5em;
+}

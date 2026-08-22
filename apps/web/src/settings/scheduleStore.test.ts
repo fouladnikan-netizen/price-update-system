@@ -1,23 +1,41 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { defaultSchedule, parseSchedule, shouldRunSchedule } from "./scheduleStore.ts";
+import {
+  DEFAULT_SLOTS,
+  defaultSchedule,
+  dueScheduleSlot,
+  markSlotRan,
+  parseSchedule,
+  shouldRunSchedule,
+} from "./scheduleStore.ts";
 
-test("parseSchedule keeps a valid clock and drops illegal weekdays", () => {
-  const parsed = parseSchedule({ enabled: true, time: "14:00", days: [6, 99] });
-  assert.equal(parsed.time, "14:00");
+test("old single-time schedules become the 11:00 to 14:30 slots", () => {
+  const parsed = parseSchedule({ enabled: true, time: "09:00", days: [6, 99] });
+  assert.deepEqual(parsed.slots, DEFAULT_SLOTS);
+  assert.equal(parsed.time, "11:00");
   assert.deepEqual(parsed.days, [6]);
+  assert.equal(parsed.enabled, true);
 });
 
-test("disabled schedule never runs", () => {
-  const schedule = { ...defaultSchedule(), enabled: false, days: [6], time: "09:00" };
-  assert.equal(shouldRunSchedule(schedule, { weekday: 6, time: "09:00", dateKey: "2026-08-20" }, null), false);
+test("disabled schedule never runs a slot", () => {
+  const schedule = { ...defaultSchedule(), enabled: false, days: [6] };
+  assert.equal(dueScheduleSlot(schedule, { weekday: 6, time: "11:00", dateKey: "2026-08-22" }, null), null);
 });
 
-test("schedule runs once per matching Tehran day and time", () => {
-  const schedule = { enabled: true, days: [6], time: "09:00" };
-  const clock = { weekday: 6, time: "09:00", dateKey: "2026-08-20" };
-  assert.equal(shouldRunSchedule(schedule, clock, null), true);
-  assert.equal(shouldRunSchedule(schedule, clock, "2026-08-20"), false);
-  assert.equal(shouldRunSchedule(schedule, { ...clock, time: "09:01" }, null), false);
-  assert.equal(shouldRunSchedule(schedule, { ...clock, weekday: 0 }, null), false);
+test("each Tehran slot runs once per day", () => {
+  const schedule = { ...defaultSchedule(), enabled: true, days: [6] };
+  const clock = { weekday: 6, time: "11:30", dateKey: "2026-08-22" };
+  assert.equal(dueScheduleSlot(schedule, clock, null)?.mode, "missing");
+  assert.equal(
+    dueScheduleSlot(schedule, clock, { dateKey: "2026-08-22", times: ["11:30"] }),
+    null,
+  );
+  assert.equal(dueScheduleSlot(schedule, { ...clock, time: "14:30" }, { dateKey: "2026-08-22", times: ["11:30"] })?.mode, "audit");
+  assert.equal(shouldRunSchedule(schedule, { weekday: 6, time: "09:00", dateKey: "2026-08-22" }, null), false);
+});
+
+test("marking a slot does not block later slots the same day", () => {
+  const first = markSlotRan(null, "2026-08-22", "11:00");
+  const second = markSlotRan(first, "2026-08-22", "11:30");
+  assert.deepEqual(second.times, ["11:00", "11:30"]);
 });
