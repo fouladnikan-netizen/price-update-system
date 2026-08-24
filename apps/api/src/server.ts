@@ -16,7 +16,16 @@ import {
   signSession,
   verifyCredentials,
 } from "./auth.ts";
-import { getAiConfig, getBaleConfig, getBaleUserConfig, getServerConfig, getTelegramConfig, getWebsiteConfig } from "./env.ts";
+import {
+  getAiConfig,
+  getBaleConfig,
+  getBaleUserConfig,
+  getServerConfig,
+  getTelegramBotConfig,
+  getTelegramConfig,
+  getWebsiteConfig,
+} from "./env.ts";
+import { pingTelegramBot } from "./telegramBot.ts";
 import { extractPrices, extractPricesFromImage, matchDrafts } from "./extract.ts";
 import { applyMigrations } from "./migrate.ts";
 import { AiGatewayError } from "./openai.ts";
@@ -159,7 +168,11 @@ const server = createServer(async (req, res) => {
       const db = await pingDatabase();
       const website = getWebsiteConfig();
       const bale = getBaleConfig();
-      const balePing = bale.configured ? await pingBaleBot() : { ok: false };
+      const telegramBot = getTelegramBotConfig();
+      const balePing = bale.configured ? await pingBaleBot() : { ok: false, error: "توکن بله تنظیم نشده است." };
+      const telegramBotPing = telegramBot.configured
+        ? await pingTelegramBot()
+        : { ok: false, error: "توکن ربات تلگرام تنظیم نشده است." };
       json(res, req, 200, {
         ok: true,
         configured: config.configured,
@@ -168,10 +181,19 @@ const server = createServer(async (req, res) => {
         imagePromptVersion: IMAGE_PROMPT_VERSION,
         autoPublish: false,
         websiteConfigured: website.configured,
+        // Organizational Telegram user session (MTProto) — separate from the bot.
+        telegramUserConfigured: getTelegramConfig().configured,
         telegramConfigured: getTelegramConfig().configured,
+        // Bot API (@price_update_nikan_bot) — TELEGRAM_BOT_TOKEN only.
+        telegramBotConfigured: telegramBot.configured,
+        telegramBotConnected: telegramBotPing.ok,
+        telegramBotUsername: telegramBotPing.ok ? telegramBotPing.username : undefined,
+        telegramBotError: telegramBotPing.ok ? undefined : telegramBotPing.error,
+        // Bale bot inbox — BALE_BOT_TOKEN only. Never reuse on Telegram.
         baleConfigured: bale.configured,
         baleConnected: balePing.ok,
         baleBotUsername: balePing.ok ? balePing.username : undefined,
+        baleError: balePing.ok ? undefined : balePing.error,
         baleUserConfigured: getBaleUserConfig().configured,
         database: db,
       });

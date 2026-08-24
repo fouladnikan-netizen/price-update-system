@@ -35,6 +35,25 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # Telegram bot long-polling worker (@price_update_nikan_bot).
+  # Separate from Bale (which polls inside `app`). Never put BALE_BOT_TOKEN here.
+  telegram-bot:
+    build: .
+    container_name: price-update-telegram-bot
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://price_update:price_update@postgres:5432/price_update
+    working_dir: /app/apps/api
+    command: ["./node_modules/.bin/tsx", "src/telegram-bot-worker.ts"]
+    volumes:
+      - price_update_raw:/app/data/raw-inputs
+      - price_update_applied:/app/data/applied-prices
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   price_update_pg:
   price_update_raw:
