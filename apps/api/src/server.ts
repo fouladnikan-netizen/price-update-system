@@ -32,6 +32,7 @@ import { MAX_IMAGE_BYTES, listRawTexts, publicRawUrl, readRawImage, readRawText,
 import { loadPersistedSchedule, savePersistedSchedule, startSchedulePoller } from "./scheduler.ts";
 import { runScheduledSourceUpdate } from "./scheduledUpdate.ts";
 import { suggestSourceIdentity } from "./sourceIdentity.ts";
+import { gzipBuffer, mergeVary } from "./compress.ts";
 import { staticDirExists, tryServeStatic } from "./static.ts";
 
 const CORS = {
@@ -59,12 +60,21 @@ function corsHeaders(req: IncomingMessage): Record<string, string> {
 }
 
 function json(res: ServerResponse, req: IncomingMessage, status: number, body: unknown, extra: Record<string, string> = {}): void {
-  res.writeHead(status, {
+  const raw = Buffer.from(JSON.stringify(body));
+  const compressed = gzipBuffer(raw, req);
+  const headers: Record<string, string> = {
     "Content-Type": "application/json; charset=utf-8",
     ...corsHeaders(req),
     ...extra,
-  });
-  res.end(JSON.stringify(body));
+  };
+  const payload = compressed?.body ?? raw;
+  headers["Content-Length"] = String(payload.length);
+  if (compressed) {
+    headers["Content-Encoding"] = compressed.encoding;
+    headers.Vary = mergeVary(headers.Vary, "Accept-Encoding");
+  }
+  res.writeHead(status, headers);
+  res.end(payload);
 }
 
 async function readBody(req: IncomingMessage, maxBytes: number): Promise<Buffer> {

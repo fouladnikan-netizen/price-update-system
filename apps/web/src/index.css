@@ -64,7 +64,7 @@
   --rail-muted: #b4b4b4;
   --radius: 16px;
   --shadow: 0 10px 30px rgba(26, 26, 26, 0.06);
-  --font: "Meem", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font: "Meem", ui-sans-serif, system-ui, sans-serif;
   --tracking: 0;
   --page-pad: 20px;
 }
