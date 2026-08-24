@@ -3,9 +3,9 @@ import {
   dailyRowsFromIntakes,
   draftCollect,
   intakesFromKeptSources,
-  liveSources,
   toDailyPrice,
 } from "../../web/src/intake/priceUpdate.ts";
+import { scheduledCollectSources } from "../../web/src/settings/scheduledCollectPolicy.ts";
 import { countDailyPriceChanges, mergeMissingDailyPrices, type DailyPrice } from "../../web/src/intake/dailyPriceStore.ts";
 import type { IntakeRecord } from "../../web/src/intake/rawStore.ts";
 import type { PriceSource } from "../../web/src/settings/sourceStore.ts";
@@ -31,7 +31,7 @@ export type ScheduledUpdateResult = {
 async function collectLiveSources(): Promise<{ collected: IntakeRecord[]; sources: PriceSource[] }> {
   const fromDb = await loadSourcesFromDb();
   const sources = fromDb?.sources ?? [];
-  const live = liveSources(sources);
+  const live = scheduledCollectSources(sources);
   const collected: IntakeRecord[] = [];
 
   for (const source of live) {

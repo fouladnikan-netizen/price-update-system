@@ -47,9 +47,7 @@ export function getCategoryProducts(
   return [...scoped].sort(compareProductsByGroupThenSize);
 }
 
-/** UI subgroup codes map onto the Website categoryCode `channel`. */
-function resolveCatalogCategoryCode(groupCode: string, categoryCode: string): string {
-  if (groupCode === "channel") return "channel";
+function resolveCatalogCategoryCode(_groupCode: string, categoryCode: string): string {
   return categoryCode;
 }
 

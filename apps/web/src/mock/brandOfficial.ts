@@ -28,6 +28,8 @@ const TABLE_TO_CATEGORIES: Record<string, string[]> = {
   "ورق عرشه فولادی": ["sheet/deck"],
   "ورق شیروانی": ["sheet/roof"],
   "لوله مانیسمان": ["pipe/seamless"],
+  "لوله اسپیرال": ["pipe/spiral"],
+  "لوله جدار چاه": ["pipe/casing"],
 };
 
 const CATEGORY_ROWS = (() => {
