@@ -5,6 +5,10 @@ import { parseMillPriceItems } from "./millPriceTable.ts";
 
 const brands = getScopeBrands("rebar", "ribbed");
 
+function brandId(name: string): string {
+  return brands.find((item) => item.name === name)?.id ?? "";
+}
+
 test("reads stacked ahanonline mill rows with factory prices", () => {
   const text = `میلگرد ذوب آهن اصفهان
 آخرین بروزرسانی
@@ -40,7 +44,7 @@ test("reads compact pivan mill rows and skips call-for-price", () => {
   assert.equal(items.length, 2);
   assert.equal(items[0]?.size, "14");
   assert.equal(items[0]?.factory_price, 67700);
-  assert.equal(items[0]?.suggested_brand_id, "rebar-ribbed-11");
+  assert.equal(items[0]?.suggested_brand_id, brandId("ذوب آهن اصفهان"));
   assert.equal(items[1]?.size, "16");
   assert.equal(items[1]?.factory_price, 66800);
 });
@@ -65,11 +69,11 @@ A3
 66,363`;
   const items = parseMillPriceItems(text, brands);
   assert.equal(items.length, 2);
-  assert.equal(items[0]?.suggested_brand_id, "rebar-ribbed-02");
+  assert.equal(items[0]?.suggested_brand_id, brandId("آذر امین"));
   assert.equal(items[0]?.suggested_brand_name, "آذر امین");
   assert.equal(items[0]?.factory_price, 66636);
   const compact = parseMillPriceItems("۱۴ A3 آذرفولاد امین کارخانه کیلوگرم ۶۶,۳۶۳", brands);
-  assert.equal(compact[0]?.suggested_brand_id, "rebar-ribbed-02");
+  assert.equal(compact[0]?.suggested_brand_id, brandId("آذر امین"));
   assert.equal(compact[0]?.factory_price, 66363);
 });
 
@@ -84,7 +88,7 @@ test("reads ahanprice mill product rows with grade on the name line", () => {
 ۷۰٬۰۰۰`;
   const items = parseMillPriceItems(text, brands);
   assert.equal(items.length, 3);
-  assert.equal(items[0]?.suggested_brand_id, "rebar-ribbed-02");
+  assert.equal(items[0]?.suggested_brand_id, brandId("آذر امین"));
   assert.equal(items[0]?.size, "8");
   assert.equal(items[0]?.grade, "A2");
   assert.equal(items[0]?.factory_price, 70545);
@@ -99,7 +103,7 @@ test("قائم اصفهان product rows map to قائم رازی", () => {
     "14 قیمت میلگرد 14 قائم اصفهان A3 14\n۷۰٬۰۰۰",
     brands,
   );
-  assert.equal(items[0]?.suggested_brand_id, "rebar-ribbed-28");
+  assert.equal(items[0]?.suggested_brand_id, brandId("قائم رازی"));
   assert.equal(items[0]?.suggested_brand_name, "قائم رازی");
 });
 
@@ -126,7 +130,7 @@ test("reads اصفهان آهن mill cards with rial VAT-inclusive prices", () =
   assert.equal(items[0]?.warehouse_price, 748000);
   assert.equal(items[0]?.factory_price, null);
   assert.equal(items[0]?.unit, "rial_per_kg");
-  assert.equal(items[1]?.suggested_brand_id, "rebar-ribbed-10");
+  assert.equal(items[1]?.suggested_brand_id, brandId("درپاد تبریز"));
   assert.equal(items[1]?.size, "8");
   assert.equal(items[1]?.grade, "A2");
   assert.equal(items[1]?.factory_price, 705000);
@@ -143,7 +147,7 @@ test("reads فولاد ایرانیان size-grade-weight-city rows", () => {
 ۷۰,۰۰۰ ۰٪`;
   const items = parseMillPriceItems(text, brands);
   assert.equal(items.length, 2);
-  assert.equal(items[0]?.suggested_brand_id, "rebar-ribbed-10");
+  assert.equal(items[0]?.suggested_brand_id, brandId("درپاد تبریز"));
   assert.equal(items[0]?.size, "8");
   assert.equal(items[0]?.grade, "A2");
   assert.equal(items[0]?.factory_price, 70700);
@@ -181,6 +185,6 @@ A3
     "قیمت میلگرد نیشابور\nقیمت میلگرد 14 نیشابور 14 A3 14.52 59,500 54,587",
     brands,
   );
-  assert.equal(neishabur[0]?.suggested_brand_id, "rebar-ribbed-09");
+  assert.equal(neishabur[0]?.suggested_brand_id, brandId("فولاد نیشابور"));
   assert.equal(neishabur[0]?.size, "14");
 });

@@ -8,14 +8,19 @@ import { saveAppliedPrices, upsertAppliedPrices } from "./appliedPrices.ts";
 import { dailyRowsFromObservations, processBaleInbox } from "./botInbox.ts";
 import type { ObservationMatch } from "./match.ts";
 
+import { getScopeBrands } from "./catalog.ts";
+
 process.env.APPLIED_PRICES_DIR = mkdtempSync(join(tmpdir(), "price-update-applied-"));
+
+const rebarBrands = getScopeBrands("rebar", "ribbed");
+const esfahanBrandId = rebarBrands.find((item) => item.name === "ذوب آهن اصفهان")?.id ?? "";
 
 function observation(overrides: Partial<ObservationMatch>): ObservationMatch {
   return {
     rawText: "میلگرد ۱۴ ذوب آهن",
-    productCode: "RBR-A3-14",
-    productName: "میلگرد ۱۴",
-    brandId: "rebar-ribbed-11",
+    productCode: "RBR-000002",
+    productName: "میلگرد آجدار A3 سایز 14  ذوب آهن",
+    brandId: esfahanBrandId,
     brandName: "ذوب آهن اصفهان",
     matchMethod: "grade_size",
     factoryPrice: 76500,
@@ -32,8 +37,8 @@ function observation(overrides: Partial<ObservationMatch>): ObservationMatch {
 test("matched bot observations become daily rial prices without publishing", () => {
   const rows = dailyRowsFromObservations([observation({})], "کانال نمونه", "1405/05/30");
   assert.equal(rows.length, 1);
-  assert.equal(rows[0]?.productCode, "RBR-A3-14");
-  assert.equal(rows[0]?.brandId, "rebar-ribbed-11");
+  assert.equal(rows[0]?.productCode, "RBR-000002");
+  assert.equal(rows[0]?.brandId, esfahanBrandId);
   assert.equal(rows[0]?.factoryPrice, 842000);
   assert.equal(rows[0]?.factorySource, "کانال نمونه");
 });
@@ -82,8 +87,8 @@ test("operator policy messages adjust today's prices without extraction", async 
   upsertAppliedPrices([
     {
       date: tehranJalaliKey(),
-      productCode: "RBR-A2-10",
-      brandId: "rebar-ribbed-11",
+      productCode: "RBR-000002",
+      brandId: esfahanBrandId,
       brandName: "ذوب آهن اصفهان",
       factoryPrice: 842_000,
       warehousePrice: null,

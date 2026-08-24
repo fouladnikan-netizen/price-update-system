@@ -1,4 +1,4 @@
-import { CATEGORY_BRANDS, getCategoryBrands } from "../mock/category-brands";
+import { getAllCategoryBrandScopes, getCategoryBrands } from "../mock/category-brands";
 import { officialNameFromBrandFile } from "../mock/brandOfficial";
 import { getUiCategoryCode, productRecordKey, type CatalogProduct } from "../mock/catalog";
 import { getProductCategory, getProductGroup } from "../mock/data";
@@ -27,7 +27,7 @@ const EMPTY_STATE: ProducerTagState = {
 
 export function websiteManufacturers(): Manufacturer[] {
   const rows: Manufacturer[] = [];
-  for (const [key, brands] of Object.entries(CATEGORY_BRANDS)) {
+  for (const [key, brands] of getAllCategoryBrandScopes()) {
     const [groupCode, categoryCode] = key.split("/");
     if (!groupCode || !categoryCode) continue;
     for (const brand of brands) {

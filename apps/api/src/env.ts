@@ -123,6 +123,23 @@ export function getBaleConfig(): BaleConfig {
   };
 }
 
+export type TelegramBotConfig = {
+  token: string;
+  apiBase: string;
+  configured: boolean;
+};
+
+export function getTelegramBotConfig(): TelegramBotConfig {
+  loadEnvFile();
+  const token = (process.env.TELEGRAM_BOT_TOKEN ?? "").trim();
+  const apiBase = (process.env.TELEGRAM_BOT_API_BASE_URL ?? "https://api.telegram.org").replace(/\/$/, "");
+  return {
+    token,
+    apiBase,
+    configured: Boolean(token),
+  };
+}
+
 export type BaleUserConfig = {
   session: string;
   configured: boolean;

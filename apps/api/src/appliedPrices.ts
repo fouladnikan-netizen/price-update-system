@@ -72,3 +72,21 @@ export function saveBaleOffset(offset: number): void {
   ensureDir();
   writeFileSync(offsetFile(), `${JSON.stringify({ offset })}\n`);
 }
+
+function telegramBotOffsetFile(): string {
+  return resolve(appliedDir(), "telegram-bot-offset.json");
+}
+
+export function loadTelegramBotOffset(): number {
+  try {
+    const parsed = JSON.parse(readFileSync(telegramBotOffsetFile(), "utf8")) as { offset?: number };
+    return Number(parsed.offset) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function saveTelegramBotOffset(offset: number): void {
+  ensureDir();
+  writeFileSync(telegramBotOffsetFile(), `${JSON.stringify({ offset })}\n`);
+}
