@@ -1,11 +1,23 @@
 #!/usr/bin/env node
 /**
- * Price-system catalog = Final Product.xlsx rows, one-for-one.
- * Source: apps/web/src/mock/excel-catalog-rows.json (parsed from the xlsx).
+ * OFFLINE / ARCHIVE ONLY.
+ * Do NOT use this to overwrite the runtime catalog.
+ * Runtime source of truth is Website SKUs via scripts/sync-catalog-from-website.mjs
+ *
+ * Requires ALLOW_FINAL_PRODUCT_CATALOG=1 to run.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+if (process.env.ALLOW_FINAL_PRODUCT_CATALOG !== "1") {
+  console.error(
+    "Refused: Final Product sync invents compositional SKUs and breaks Website catalog lock.\n" +
+      "Use: node scripts/sync-catalog-from-website.mjs\n" +
+      "Override only with ALLOW_FINAL_PRODUCT_CATALOG=1 (archive/debug).",
+  );
+  process.exit(1);
+}
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const excelPath = resolve(root, "apps/web/src/mock/excel-catalog-rows.json");

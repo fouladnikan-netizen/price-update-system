@@ -6,7 +6,7 @@ import { toRegisteredRial } from "./rial";
 
 const DECISIONS_KEY = "price-update.review-decisions.v1";
 
-export type QueueKind = "unmatched" | "suspicious" | "matched";
+export type QueueKind = "unmatched" | "ambiguous" | "suspicious" | "matched";
 
 export type QueueItem = {
   id: string;
@@ -60,7 +60,13 @@ export function clearDecisions(): void {
 }
 
 export function isOpenStatus(status: ObservationStatus): boolean {
-  return status === "pending_review" || status === "unmatched" || status === "suspicious" || status === "needs_more_review";
+  return (
+    status === "pending_review" ||
+    status === "unmatched" ||
+    status === "ambiguous" ||
+    status === "suspicious" ||
+    status === "needs_more_review"
+  );
 }
 
 export function applySourceCoverage(
@@ -103,12 +109,14 @@ export function isCatalogItem(item: Pick<QueueItem, "productCode">): boolean {
 
 function kindFromObservation(status: string, productCode: string | null): QueueKind {
   if (status === "archived" || !productCode || status === "unmatched") return "unmatched";
+  if (status === "ambiguous") return "ambiguous";
   if (status === "suspicious") return "suspicious";
   return "matched";
 }
 
 function initialStatus(kind: QueueKind, observationStatus: string): ObservationStatus {
   if (observationStatus === "archived") return "archived";
+  if (observationStatus === "ambiguous" || kind === "ambiguous") return "ambiguous";
   if (kind === "unmatched") return "unmatched";
   if (kind === "suspicious") return "suspicious";
   return "pending_review";

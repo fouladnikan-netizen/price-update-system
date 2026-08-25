@@ -1,0 +1,383 @@
+{
+  "version": "2026-08-25",
+  "selectionPolicy": "MAX_valid_comparable_net_price_irr",
+  "note": "priority = read/display order only, never price preference. URLs must not be guessed or substituted.",
+  "categories": [
+    {
+      "key": "rebar/ribbed",
+      "nameFa": "میلگرد",
+      "groupCode": "rebar",
+      "categoryCode": "ribbed",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/میلگرد/قیمت-میلگرد/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/میلگرد-آجدار" },
+        { "priority": 3, "name": "نگین فولاد السا", "url": "https://neginfoolad.ir/آهن-آلات/میلگرد/قیمت-میلگرد/" },
+        { "priority": 4, "name": "مرکز آهن", "url": "https://www.markazeahan.com/product-category/میلگرد/" }
+      ]
+    },
+    {
+      "key": "rebar/plain",
+      "nameFa": "میلگرد ساده",
+      "groupCode": "rebar",
+      "categoryCode": "plain",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/میلگرد-ساده" },
+        { "priority": 2, "name": "نگین فولاد السا", "url": "https://neginfoolad.ir/آهن-آلات/میلگرد/قیمت-میلگرد-ساده/" },
+        { "priority": 3, "name": "مرکز آهن", "url": "https://www.markazeahan.com/product-category/میلگرد-ساده/" }
+      ]
+    },
+    {
+      "key": "beam/ipe",
+      "nameFa": "تیرآهن",
+      "groupCode": "beam",
+      "categoryCode": "ipe",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "نگین فولاد السا", "url": "https://neginfoolad.ir/آهن-آلات/تیر-آهن/قیمت-تیرآهن/" },
+        { "priority": 2, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/تیرآهن-و-هاش/تیرآهن/" },
+        { "priority": 3, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/تیرآهن" }
+      ]
+    },
+    {
+      "key": "beam/h",
+      "nameFa": "تیرآهن هاش",
+      "groupCode": "beam",
+      "categoryCode": "h",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/تیرآهن-و-هاش/هاش/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/هاش" },
+        { "priority": 3, "name": "نگین فولاد السا", "url": "https://neginfoolad.ir/آهن-آلات/تیر-آهن/قیمت-تیرآهن-هاش/" }
+      ]
+    },
+    {
+      "key": "angle/angle",
+      "nameFa": "نبشی",
+      "groupCode": "angle",
+      "categoryCode": "angle",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/نبشی-و-ناودانی/نبشی/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/نبشی" }
+      ]
+    },
+    {
+      "key": "channel/sabok",
+      "nameFa": "ناودانی",
+      "groupCode": "channel",
+      "categoryCode": "sabok",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ناودانی-ایرانی" }
+      ]
+    },
+    {
+      "key": "channel/sangin",
+      "nameFa": "ناودانی سنگین",
+      "groupCode": "channel",
+      "categoryCode": "sangin",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "پیوان", "url": "https://pivan.co/product-category/uchannel/" }
+      ]
+    },
+    {
+      "key": "pipe/seamless",
+      "nameFa": "لوله مانیسمان",
+      "groupCode": "pipe",
+      "categoryCode": "seamless",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-مانسمان/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/لوله-مانیسمان" },
+        { "priority": 3, "name": "سپندار لوله", "url": "https://sepandarlooleh.com/mannesmann/" }
+      ]
+    },
+    {
+      "key": "pipe/water",
+      "nameFa": "لوله آب",
+      "groupCode": "pipe",
+      "categoryCode": "water",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-درز-مستقیم/لوله-تست-آب/" },
+        { "priority": 2, "name": "سپندار لوله", "url": "https://sepandarlooleh.com/gas-pipe-and-test/" }
+      ]
+    },
+    {
+      "key": "pipe/gas",
+      "nameFa": "لوله گاز",
+      "groupCode": "pipe",
+      "categoryCode": "gas",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-درز-مستقیم/لوله-گاز-خانگی/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/لوله-گازی" }
+      ]
+    },
+    {
+      "key": "pipe/api",
+      "nameFa": "لوله API",
+      "groupCode": "pipe",
+      "categoryCode": "api",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-درز-مستقیم/قیمت-لوله-api/" },
+        { "priority": 2, "name": "سپندار لوله", "url": "https://sepandarlooleh.com/api-pipe/" }
+      ]
+    },
+    {
+      "key": "pipe/galvanized",
+      "nameFa": "لوله گالوانیزه",
+      "groupCode": "pipe",
+      "categoryCode": "galvanized",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-گالوانیزه/" },
+        { "priority": 2, "name": "سپندار لوله", "url": "https://sepandarlooleh.com/galvanized-pipe/" }
+      ]
+    },
+    {
+      "key": "pipe/greenhouse",
+      "nameFa": "لوله گلخانه",
+      "groupCode": "pipe",
+      "categoryCode": "greenhouse",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-گالوانیزه/لوله-گلخانه/" }
+      ]
+    },
+    {
+      "key": "pipe/casing",
+      "nameFa": "لوله جدار چاه",
+      "groupCode": "pipe",
+      "categoryCode": "casing",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-جدار-چاه/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/لوله-جدار-چاه" }
+      ]
+    },
+    {
+      "key": "pipe/spiral",
+      "nameFa": "لوله اسپیرال",
+      "groupCode": "pipe",
+      "categoryCode": "spiral",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-لوله/لوله-اسپیرال/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/لوله-اسپیرال" }
+      ]
+    },
+    {
+      "key": "sheet/black",
+      "nameFa": "ورق سیاه",
+      "groupCode": "sheet",
+      "categoryCode": "black",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-سیاه/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ورق-سیاه" }
+      ]
+    },
+    {
+      "key": "sheet/st52",
+      "nameFa": "ورق ST52",
+      "groupCode": "sheet",
+      "categoryCode": "st52",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-st52/" }
+      ]
+    },
+    {
+      "key": "sheet/checker",
+      "nameFa": "ورق آجدار",
+      "groupCode": "sheet",
+      "categoryCode": "checker",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-آجدار/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ورق-آجدار" }
+      ]
+    },
+    {
+      "key": "sheet/wear",
+      "nameFa": "ورق ضدسایش",
+      "groupCode": "sheet",
+      "categoryCode": "wear",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-ضد-سایش/" }
+      ]
+    },
+    {
+      "key": "sheet/ck45",
+      "nameFa": "ورق CK45",
+      "groupCode": "sheet",
+      "categoryCode": "ck45",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/Ck45/" }
+      ]
+    },
+    {
+      "key": "sheet/pickled",
+      "nameFa": "ورق اسیدشویی",
+      "groupCode": "sheet",
+      "categoryCode": "pickled",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-اسید-شوئی/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ورق-اسیدشویی" }
+      ]
+    },
+    {
+      "key": "sheet/galvanized",
+      "nameFa": "ورق گالوانیزه",
+      "groupCode": "sheet",
+      "categoryCode": "galvanized",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-گالوانیزه/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ورق-گالوانیزه" },
+        { "priority": 3, "name": "آهن شاپ", "url": "https://www.ahan.shop/price/galvanized-sheet/" }
+      ]
+    },
+    {
+      "key": "sheet/oiled",
+      "nameFa": "ورق روغنی",
+      "groupCode": "sheet",
+      "categoryCode": "oiled",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-روغنی/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ورق-روغنی" },
+        { "priority": 3, "name": "آهن شاپ", "url": "https://www.ahan.shop/price/sheet-oil/" }
+      ]
+    },
+    {
+      "key": "sheet/color",
+      "nameFa": "ورق رنگی",
+      "groupCode": "sheet",
+      "categoryCode": "color",
+      "pricingMode": "web_max",
+      "sources": [
+        { "priority": 1, "name": "آهن آنلاین", "url": "https://ahanonline.com/product-category/انواع-ورق/ورق-رنگی/" },
+        { "priority": 2, "name": "آهن پرایس", "url": "https://ahanprice.com/Price/ورق-رنگی" },
+        { "priority": 3, "name": "آهن شاپ", "url": "https://www.ahan.shop/price/color-sheet/" }
+      ]
+    },
+    {
+      "key": "sheet/roof",
+      "nameFa": "ورق شیروانی",
+      "groupCode": "sheet",
+      "categoryCode": "roof",
+      "pricingMode": "formula",
+      "sources": [],
+      "formula": { "referenceCategoryKey": "sheet/color", "fixedAdjustmentIrr": 23000 }
+    },
+    {
+      "key": "sheet/deck",
+      "nameFa": "ورق عرشه فولادی",
+      "groupCode": "sheet",
+      "categoryCode": "deck",
+      "pricingMode": "formula",
+      "sources": [],
+      "formula": { "referenceCategoryKey": "sheet/galvanized", "fixedAdjustmentIrr": 23000 }
+    },
+    {
+      "key": "sheet/a283",
+      "nameFa": "ورق A283",
+      "groupCode": "sheet",
+      "categoryCode": "a283",
+      "pricingMode": "formula",
+      "sources": [],
+      "formula": { "referenceCategoryKey": "sheet/black", "fixedAdjustmentIrr": 15000 }
+    },
+    {
+      "key": "sheet/a36",
+      "nameFa": "ورق A36",
+      "groupCode": "sheet",
+      "categoryCode": "a36",
+      "pricingMode": "formula",
+      "sources": [],
+      "formula": { "referenceCategoryKey": "sheet/black", "fixedAdjustmentIrr": 15000 }
+    },
+    {
+      "key": "sheet/a516",
+      "nameFa": "ورق A516",
+      "groupCode": "sheet",
+      "categoryCode": "a516",
+      "pricingMode": "formula",
+      "sources": [],
+      "formula": { "referenceCategoryKey": "sheet/st52", "fixedAdjustmentIrr": 15000 }
+    },
+    {
+      "key": "profile/mobli",
+      "nameFa": "پروفیل مبلی",
+      "groupCode": "profile",
+      "categoryCode": "mobli",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "profile/construction",
+      "nameFa": "پروفیل",
+      "groupCode": "profile",
+      "categoryCode": "construction",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "profile/industrial",
+      "nameFa": "پروفیل صنعتی",
+      "groupCode": "profile",
+      "categoryCode": "industrial",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "profile/galvanized",
+      "nameFa": "پروفیل گالوانیزه",
+      "groupCode": "profile",
+      "categoryCode": "galvanized",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "profile/z",
+      "nameFa": "پروفیل زد",
+      "groupCode": "profile",
+      "categoryCode": "z",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "profile/frame",
+      "nameFa": "پروفیل چهارچوب",
+      "groupCode": "profile",
+      "categoryCode": "frame",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "pipe/scaffold",
+      "nameFa": "لوله داربستی",
+      "groupCode": "pipe",
+      "categoryCode": "scaffold",
+      "pricingMode": "manual",
+      "sources": []
+    },
+    {
+      "key": "pipe/welded",
+      "nameFa": "لوله درزدار",
+      "groupCode": "pipe",
+      "categoryCode": "welded",
+      "pricingMode": "manual",
+      "sources": []
+    }
+  ]
+}

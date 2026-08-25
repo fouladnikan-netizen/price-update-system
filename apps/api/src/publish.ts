@@ -1,4 +1,5 @@
 import { registeredRialToToman } from "../../web/src/intake/rial.ts";
+import { findProductByCode, PRODUCTS } from "./catalog.ts";
 import { getWebsiteConfig } from "./env.ts";
 
 export class PublishError extends Error {
@@ -93,6 +94,9 @@ export function validatePublishRequest(input: PublishRequest): WebsitePublishPay
   const productCode = input.productCode?.trim() ?? "";
   if (!productCode) {
     throw new PublishError("بدون product_code / sku وب‌سایت چیزی منتشر نمی‌شود.");
+  }
+  if (!findProductByCode(PRODUCTS, productCode)) {
+    throw new PublishError("فقط sku موجود کاتالوگ وب‌سایت قابل انتشار است. محصول جدید ساخته نمی‌شود.");
   }
   const factoryRial = assertPositiveOrNull(input.factoryPrice, "قیمت کارخانه");
   const warehouseRial = assertPositiveOrNull(input.warehousePrice, "قیمت انبار");

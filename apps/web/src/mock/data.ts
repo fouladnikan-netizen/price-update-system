@@ -6,6 +6,7 @@ export type ObservationStatus =
   | "rejected"
   | "needs_more_review"
   | "unmatched"
+  | "ambiguous"
   | "suspicious"
   | "archived";
 

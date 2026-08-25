@@ -1,0 +1,775 @@
+{
+  "generatedAt": "2026-08-25T15:40:35.644Z",
+  "input": 2091,
+  "active": 2088,
+  "catalog": 1997,
+  "skipped": [
+    {
+      "sku": "P4-SH-304-1-2B",
+      "name": "ورق استیل ۳۰۴ ضخامت ۱ میل سطح ۲B",
+      "categorySlug": "cat-sheet-cold",
+      "categoryName": "ورق سرد نورد شده",
+      "brandName": "اوتکومپو فنلاند",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-SH-316-2-BA",
+      "name": "ورق استیل ۳۱۶ ضخامت ۲ میل سطح BA",
+      "categorySlug": "cat-sheet-cold",
+      "categoryName": "ورق سرد نورد شده",
+      "brandName": "آسری‌نکس اسپانیا",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-SH-304L-3-NO1",
+      "name": "ورق ۳۰۴L ضخامت ۳ میل نورد گرم No.1",
+      "categorySlug": "cat-sheet-hot",
+      "categoryName": "ورق گرم و ضخیم",
+      "brandName": "پوسکو کره جنوبی",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-PIPE-304-40S-DN50",
+      "name": "لوله بدون درز ۳۰۴ رده ۴۰S قطر ۵۰",
+      "categorySlug": "cat-pipe-industrial",
+      "categoryName": "لوله صنعتی درزدار و بدون درز",
+      "brandName": "تیسکو چین",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-PIPE-316-80S-DN80",
+      "name": "لوله ۳۱۶ رده ۸۰S قطر ۸۰",
+      "categorySlug": "cat-pipe-schedule",
+      "categoryName": "لوله رده‌دار و فشار بالا",
+      "brandName": "ای‌پی‌او‌اس آلمان",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-PROF-304-40X40X2",
+      "name": "پروفیل مربع ۴۰×۴۰ ضخامت ۲ میل استیل ۳۰۴",
+      "categorySlug": "cat-profile-hollow",
+      "categoryName": "پروفیل توخالی و مربع",
+      "brandName": "فولاد اهرام ایرانیان",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-REBAR-304-D16",
+      "name": "میلگرد استیل ۳۰۴ قطر ۱۶ میلیمتر",
+      "categorySlug": "cat-rebar-plain",
+      "categoryName": "میلگرد ساده و کلاف",
+      "brandName": "کاوین استیل البرز",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-STRIP-201-0.5",
+      "name": "تسمه استیل ۲۰۱ ضخامت ۰.۵ میل",
+      "categorySlug": "cat-strap-flat",
+      "categoryName": "تسمه و نوار فولادی",
+      "brandName": "بائواستیل چین",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-FIT-EL90-304-DN25",
+      "name": "زانو ۹۰ درجه ۳۰۴ اتصال فورج DN25",
+      "categorySlug": "cat-fit-seamless",
+      "categoryName": "اتصالات بدون درز و فشارقوی",
+      "brandName": "جیندال استیل هند",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-COIL-430-0.8",
+      "name": "کویل استیل ۴۳۰ ضخامت ۰.۸ میل",
+      "categorySlug": "cat-sheet-colored",
+      "categoryName": "ورق رنگی و پوشش‌دار",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-DECO-304-MIRROR",
+      "name": "لوله دکوراتیو ۳۰۴ آینه‌ای قطر ۳۸",
+      "categorySlug": "cat-pipe-decorative",
+      "categoryName": "لوله دکوراتیو و مبلمان",
+      "brandName": "رویال متال تهران",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-2205-PLATE-8",
+      "name": "پلیت دوبلکس ۲۲۰۵ ضخامت ۸ میل",
+      "categorySlug": "cat-sheet-hot",
+      "categoryName": "ورق گرم و ضخیم",
+      "brandName": "اوتکومپو فنلاند",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-321-HL-1.5",
+      "name": "ورق ۳۲۱ خط‌مو ضخامت ۱.۵ میل",
+      "categorySlug": "cat-sheet-cold",
+      "categoryName": "ورق سرد نورد شده",
+      "brandName": "پوسکو کره جنوبی",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "P4-254SMO-PIPE-160",
+      "name": "لوله ۲۵۴SMO رده ۱۶۰ فشار بالا",
+      "categorySlug": "cat-pipe-schedule",
+      "categoryName": "لوله رده‌دار و فشار بالا",
+      "brandName": "اوتکومپو فنلاند",
+      "reason": "non-construction"
+    },
+    {
+      "sku": "LSNI-000011",
+      "name": "لوله تست آب 5 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000010",
+      "name": "لوله تست آب 3/4 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000001",
+      "name": "لوله تست آب 1/2 اینچ ضخامت 2 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000002",
+      "name": "لوله تست آب 3/4 اینچ ضخامت 2 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000009",
+      "name": "لوله تست آب 1 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000004",
+      "name": "لوله تست آب 2,1/2 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000006",
+      "name": "لوله تست آب 2 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000008",
+      "name": "لوله تست آب 1,1/2 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000005",
+      "name": "لوله تست آب 1/2 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000007",
+      "name": "لوله تست آب 1,1/4 اینچ ضخامت 2.5 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000003",
+      "name": "لوله تست آب 1 اینچ ضخامت 2 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000012",
+      "name": "لوله تست آب 1,1/4 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000015",
+      "name": "لوله تست آب 4 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000016",
+      "name": "لوله تست آب 2,1/2 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000022",
+      "name": "لوله تست آب 5 اینچ ضخامت 4 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000021",
+      "name": "لوله تست آب 2 اینچ ضخامت 4 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000018",
+      "name": "لوله تست آب 2,1/2 اینچ ضخامت 4 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000013",
+      "name": "لوله تست آب 3 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000014",
+      "name": "لوله تست آب 1,1/2 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000020",
+      "name": "لوله تست آب 4 اینچ ضخامت 4 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000019",
+      "name": "لوله تست آب 3 اینچ ضخامت 4 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "LSNI-000017",
+      "name": "لوله تست آب 2 اینچ ضخامت 3 میل",
+      "categorySlug": "lule-sanati",
+      "categoryName": "لوله صنعتی",
+      "brandName": "لوله تست آب ساوه",
+      "reason": "excluded"
+    },
+    {
+      "sku": "VDRY-000008",
+      "name": "ورق A36 ضخامت 15 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000001",
+      "name": "ورق A36 ضخامت 3 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000004",
+      "name": "ورق A36 ضخامت 6 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000006",
+      "name": "ورق A36 ضخامت 10 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000007",
+      "name": "ورق A36 ضخامت 12 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000003",
+      "name": "ورق A36 ضخامت 5 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000005",
+      "name": "ورق A36 ضخامت 8 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000002",
+      "name": "ورق A36 ضخامت 4 میل شیت 1500*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000011",
+      "name": "ورق A36 ضخامت  12 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000016",
+      "name": "ورق A36 ضخامت  35 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000015",
+      "name": "ورق A36 ضخامت  30 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000013",
+      "name": "ورق A36 ضخامت  20 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000012",
+      "name": "ورق A36 ضخامت  15 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000014",
+      "name": "ورق A36 ضخامت  25 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000009",
+      "name": "ورق A36 ضخامت  8 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000010",
+      "name": "ورق A36 ضخامت  10 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VDRY-000017",
+      "name": "ورق A36 ضخامت  40 میل شیت 2000*6000",
+      "categorySlug": "varaq-daryayi",
+      "categoryName": "ورق دریایی",
+      "brandName": "پسکو کره جنوبی",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000009",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.7 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "کاشان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000003",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.6 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000001",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.4 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000008",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.6 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "کاشان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000010",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.8 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "کاشان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000002",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.5 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000006",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.4 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "کاشان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000004",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.7 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000005",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.8 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000007",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.5 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "کاشان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000019",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.7 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "تاراز",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000020",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.8 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "تاراز",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000012",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.5 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "شهرکرد",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000017",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.5 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "تاراز",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000015",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.8 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "شهرکرد",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000014",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.7 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "شهرکرد",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000011",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.4 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "شهرکرد",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000018",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.6 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "تاراز",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000013",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.6 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "شهرکرد",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRS-000016",
+      "name": "ورق کرکره سینوسی گالوانیزه ضخامت 0.4 میل",
+      "categorySlug": "varaq-karkare-sinusi",
+      "categoryName": "ورق کرکره سینوسی",
+      "brandName": "تاراز",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000012",
+      "name": "ورق کرکره رنگی قهوه‌ایی سوخته رال 8017 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000011",
+      "name": "ورق کرکره رنگی نارنجی رال 2004 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000010",
+      "name": "ورق کرکره رنگی سبز رال 6024 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000009",
+      "name": "ورق کرکره رنگی قرمز رال 3000 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000008",
+      "name": "ورق کرکره رنگی آبی رال 5015 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000007",
+      "name": "ورق کرکره رنگی سفید رال 9016 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد هفت الماس",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000006",
+      "name": "ورق کرکره رنگی قهوه‌ایی سوخته رال 8017 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000005",
+      "name": "ورق کرکره رنگی نارنجی رال 2004 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000004",
+      "name": "ورق کرکره رنگی سبز رال 6024 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000003",
+      "name": "ورق کرکره رنگی قرمز رال 3000 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000002",
+      "name": "ورق کرکره رنگی آبی رال 5015 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000001",
+      "name": "ورق کرکره رنگی سفید رال 9016 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد مبارکه اصفهان",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000018",
+      "name": "ورق کرکره رنگی قهوه‌ایی سوخته رال 8017 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد غرب",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000017",
+      "name": "ورق کرکره رنگی نارنجی رال 2004 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد غرب",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000015",
+      "name": "ورق کرکره رنگی قرمز رال 3000 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد غرب",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000013",
+      "name": "ورق کرکره رنگی سفید رال 9016 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد غرب",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000014",
+      "name": "ورق کرکره رنگی آبی رال 5015 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد غرب",
+      "reason": "unmapped"
+    },
+    {
+      "sku": "VKRR-000016",
+      "name": "ورق کرکره رنگی سبز رال 6024 ضحامت 0.48 میل",
+      "categorySlug": "varaq-karkare-rangi",
+      "categoryName": "ورق کرکره رنگی",
+      "brandName": "فولاد غرب",
+      "reason": "unmapped"
+    }
+  ],
+  "byScope": {
+    "rebar/ribbed": 284,
+    "beam/ipe": 57,
+    "beam/h": 44,
+    "profile/mobli": 32,
+    "profile/construction": 166,
+    "profile/industrial": 87,
+    "angle/angle": 100,
+    "channel/sabok": 27,
+    "channel/sangin": 58,
+    "pipe/seamless": 108,
+    "pipe/gas": 137,
+    "pipe/api": 49,
+    "pipe/galvanized": 134,
+    "pipe/greenhouse": 53,
+    "pipe/water": 22,
+    "pipe/scaffold": 9,
+    "pipe/welded": 22,
+    "pipe/casing": 12,
+    "pipe/spiral": 20,
+    "sheet/black": 184,
+    "sheet/pickled": 28,
+    "sheet/checker": 16,
+    "sheet/st52": 29,
+    "sheet/a283": 26,
+    "sheet/wear": 30,
+    "sheet/a516": 20,
+    "sheet/ck45": 17,
+    "sheet/galvanized": 90,
+    "sheet/deck": 40,
+    "sheet/oiled": 60,
+    "sheet/roof": 18,
+    "sheet/color": 18
+  },
+  "skippedByReason": {
+    "non-construction": 14,
+    "excluded": 22,
+    "unmapped": 55
+  }
+}

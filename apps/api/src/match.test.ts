@@ -57,6 +57,23 @@ test("does not invent a brand", () => {
   assert.equal(result.status, "suspicious");
 });
 
+test("ambiguous grade+size without unique brand stays unmatched to a product", () => {
+  const result = matchExtractedItem(
+    draft({
+      suggested_product_code: null,
+      suggested_brand_name: null,
+      grade: "A3",
+      size: "14",
+      factory_price: 40000,
+    }),
+    products,
+    brands,
+  );
+  assert.equal(result.productCode, null);
+  assert.ok(result.status === "ambiguous" || result.status === "unmatched" || result.status === "suspicious");
+  assert.notEqual(result.status, "pending_review");
+});
+
 test("zero factory price becomes null", () => {
   const result = matchExtractedItem(draft({ suggested_product_code: "RBR-000002", factory_price: 0 }), products, brands);
   assert.equal(result.factoryPrice, null);

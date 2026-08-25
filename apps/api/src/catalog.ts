@@ -156,6 +156,22 @@ export function findProductByGradeSize(
   return hits.length === 1 ? hits[0] : null;
 }
 
+export function countProductsByGradeSize(
+  products: CatalogProduct[],
+  grade: string | null,
+  size: string | null,
+): number {
+  return candidatesByGradeSize(products, grade, size).length;
+}
+
+export function listProductsByGradeSize(
+  products: CatalogProduct[],
+  grade: string | null,
+  size: string | null,
+): CatalogProduct[] {
+  return candidatesByGradeSize(products, grade, size);
+}
+
 /**
  * Website SoT: one catalog row per brand×spec (sequential SKU).
  * Prefer exact brand match on brandNames / product name.

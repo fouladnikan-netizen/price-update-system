@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { PriceSource } from "./sourceStore.ts";
 import {
+  isApprovedCollectUrl,
   isScheduledCollectScope,
   isScheduledWebsite,
   scheduledCollectSources,
@@ -31,35 +32,50 @@ function source(overrides: Partial<PriceSource>): PriceSource {
   };
 }
 
-test("only ahanonline and ahanprice hosts are scheduled websites", () => {
+test("approved thinktank hosts are scheduled websites", () => {
   assert.equal(isScheduledWebsite("https://ahanonline.com/قیمت-میلگرد/"), true);
   assert.equal(isScheduledWebsite("https://www.ahanprice.com/rebar"), true);
+  assert.equal(isScheduledWebsite("https://pivan.co/product-category/uchannel/"), true);
+  assert.equal(isScheduledWebsite("https://www.ahan.shop/price/color-sheet/"), true);
   assert.equal(isScheduledWebsite("https://fooladiranian.com/rebar"), false);
-  assert.equal(isScheduledWebsite("https://ble.ir/channel"), false);
 });
 
-test("scheduled scopes keep listed catalog categories and drop the rest", () => {
+test("exact approved URLs only — no substitute pages", () => {
+  assert.equal(
+    isApprovedCollectUrl("https://ahanonline.com/product-category/میلگرد/قیمت-میلگرد/"),
+    true,
+  );
+  assert.equal(isApprovedCollectUrl("https://ahanonline.com/some-other-page/"), false);
+});
+
+test("scheduled scopes follow approved web_max categories", () => {
   assert.equal(isScheduledCollectScope("rebar", "ribbed"), true);
+  assert.equal(isScheduledCollectScope("rebar", "plain"), true);
   assert.equal(isScheduledCollectScope("sheet", "st52"), true);
-  assert.equal(isScheduledCollectScope("pipe", "api"), true);
-  assert.equal(isScheduledCollectScope("sheet", "a516"), false);
-  assert.equal(isScheduledCollectScope("profile", "construction"), false);
-  assert.equal(isScheduledCollectScope("rebar", "plain"), false);
+  assert.equal(isScheduledCollectScope("channel", "sangin"), true);
+  assert.equal(isScheduledCollectScope("sheet", "a516"), false); // formula, not web scrape
+  assert.equal(isScheduledCollectScope("profile", "construction"), false); // manual
 });
 
-test("daily timer keeps only the two websites in allowed categories", () => {
+test("daily timer keeps only exact approved URLs in web_max scopes", () => {
   const sources = [
     source({ id: "ahan-ribbed" }),
     source({
       id: "price-black",
       name: "آهن پرایس",
-      address: "https://ahanprice.com/sheet-black",
+      address: "https://ahanprice.com/Price/ورق-سیاه",
       groupCode: "sheet",
       categoryCode: "black",
     }),
     source({
-      id: "ahan-a516",
-      address: "https://ahanonline.com/a516",
+      id: "wrong-url-same-host",
+      address: "https://ahanonline.com/random-page/",
+      groupCode: "rebar",
+      categoryCode: "ribbed",
+    }),
+    source({
+      id: "formula-a516",
+      address: "https://ahanonline.com/product-category/انواع-ورق/ورق-st52/",
       groupCode: "sheet",
       categoryCode: "a516",
     }),
@@ -67,12 +83,6 @@ test("daily timer keeps only the two websites in allowed categories", () => {
       id: "other-site",
       name: "سایت دیگر",
       address: "https://example.com/rebar",
-    }),
-    source({
-      id: "bale",
-      name: "کانال بله",
-      sourceType: "bale",
-      address: "https://ble.ir/prices",
     }),
   ];
   assert.deepEqual(
